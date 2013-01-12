@@ -1,0 +1,107 @@
+#! /bin/bash
+# Requires Powerline patched fonts: https://gist.github.com/1595572
+# Colors from http://www.arwin.net/tech/bash.php
+
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+	xterm-256color) color_prompt=yes;;
+esac
+
+SEPARATOR="⮀"
+BRANCH="⭠"
+
+COLOR_NONE="\[\e[0m\]"
+
+# Deprecate these
+BLACK="\[\e[1;30m\]"
+LIGHT_BLACK="\[\e[0;30m\]"
+RED="\[\e[1;31m\]"
+LIGHT_RED="\[\e[0;31m\]"
+YELLOW="\[\e[1;33m\]"
+GREEN="\[\e[1;32m\]"
+LIGHT_GREEN="\[\e[0;32m\]"
+BLUE="\[\e[1;34m\]"
+LIGHT_BLUE="\[\e[0;34m\]"
+WHITE="\[\e[1;37m\]"
+LIGHT_WHITE="\[\e[0;37m\]"
+GRAY="\[\e[1;37m\]"
+BG_BLACK_WHITE="\[\e[0;37;40m\]"
+BG_GREEN_BLACK="\[\e[0;37;30m\]"
+BG_GREEN_WHITE="\[\e[0;37;42m\]"
+BG_GREEN_YELLOW="\[\e[1;37;42m\]"
+BG_GREEN_BLACK="\[\e[0;40;30m\]"
+BG_BLUE_WHITE="\[\e[0;37;44m\]"
+BG_BLUE_BLACK="\[\e[0;44;30m\]"
+# End deprecated items
+
+# pass foreground then background (optional)
+function _color() {
+	local PROMPT_COLOR_OUTPUT="\[\e[$1m\]"
+	
+	if ! [ -z $2 ]; then
+		PROMPT_COLOR_OUTPUT="\[\e[$2m\]${PROMPT_COLOR_OUTPUT}"
+	fi
+	
+	echo $PROMPT_COLOR_OUTPUT
+}
+
+function _gitStatus() {
+	local FORBIDDEN="homebrew.git"
+
+	local GIT_STATUS="$(_color "30")${SEPARATOR}${COLOR_NONE}"
+	local GIT_STATUS_TEXT="$(__git_ps1 "%s")"
+	
+	if [[ -n "$GIT_STATUS_TEXT" ]]; then
+		local GIT_REPO=''
+		local GIT_REMOTE=`git remote -v`		
+		local SHOW_GIT=1
+
+		if ! [ -z "$GIT_REMOTE" ]; then	
+			GIT_REPO=$(basename `echo $GIT_REMOTE | grep origin | grep push | awk '{print $2;}'`)
+			for REPO in $FORBIDDEN; do
+				if [ $GIT_REPO = $REPO ]; then
+					SHOW_GIT=0
+				fi
+			done
+			GIT_REPO="$GIT_REPO "
+		fi
+		
+		if [ $SHOW_GIT = 1 ]; then
+			GIT_STATUS="$(_color "1;30" "42")${SEPARATOR}${COLOR_NONE}$(_color "37" "42") ${GIT_REPO}${BRANCH} ${GIT_STATUS_TEXT}${COLOR_NONE}$(_color "32")${SEPARATOR}${COLOR_NONE}"
+		fi
+	fi
+	
+	echo $GIT_STATUS
+}
+
+function _pythonVirtualenv() {
+    local PYTHON_VIRTUALENV=""
+	
+    if ![ test -z "$VIRTUAL_ENV" ]; then
+        PYTHON_VIRTUALENV="${BG_GREEN_YELLOW}[`basename \"$VIRTUAL_ENV\"`]${COLOR_NONE}"
+    fi
+	
+	echo "$PYTHON_VIRTUALENV"
+}
+
+function _prompt() {
+	local STATUS_COLOR="1;32"
+
+	local LOCAL_HOSTNAME=`scutil --get LocalHostName`
+	local PYTHON_VIRTUALENV=$(_pythonVirtualenv)
+	local GIT_STATUS=$(_gitStatus)
+
+	if ! [[ $? -eq 0 ]]; then
+		STATUS_COLOR="1;31"
+	fi
+			
+	PROMPT="$(_color "40" "37")\u${COLOR_NONE}${GIT_STATUS} \w $(_color "$STATUS_COLOR")\$${COLOR_NONE} "
+	PS1=${PYTHON_VIRTUALENV}${PROMPT}
+}
+
+if [ "$color_prompt" = yes ]; then
+    PROMPT_COMMAND=_prompt
+else
+	PS1='\[\e[1;32m\]\u@\h \W:$(__git_ps1) \$\[\e[0m\] '
+fi
+unset color_prompt
