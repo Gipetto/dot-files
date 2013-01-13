@@ -71,8 +71,8 @@ function _svnStatus() {
 function _pythonVirtualenv() {
     local PYTHON_VIRTUALENV=""
     	
-    if ! [ -z "$VIRTUAL_ENV" ]; then
-        PYTHON_VIRTUALENV="$(_color "37" "42")foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;30" "42")${SEPARATOL}$(_color)"
+    if  [ -z "$VIRTUAL_ENV" ]; then
+        PYTHON_VIRTUALENV="$(_color "37" "43")foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;30" "43")${SEPARATOL}$(_color)"
     fi
 	
 	echo "$PYTHON_VIRTUALENV"
