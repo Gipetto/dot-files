@@ -8,6 +8,7 @@ case "$TERM" in
 esac
 
 SEPARATOR="⮀"
+SEPARATOL="⮂"
 BRANCH="⭠"
 
 # pass foreground then background (optional)
@@ -58,9 +59,9 @@ function _gitStatus() {
 
 function _svnStatus() {
 	local SVN_STATUS_TEXT=''
+	local REVISION=$(svn info | awk '/^Revision:/{print $2}')
 	
-	if [ -d ".svn" ]; then
-		local REVISION=$(svn info | awk '/^Revision:/{print $2}')
+	if ! [ -z "$REVISION" ]; then
 		SVN_STATUS_TEXT="$(_color "1;30" "46")${SEPARATOR}$(_color)$(_color "30" "46") svn r:${REVISION}$(_color)$(_color "36")${SEPARATOR}$(_color)";
 	fi
 	
@@ -71,7 +72,7 @@ function _pythonVirtualenv() {
     local PYTHON_VIRTUALENV=""
     	
     if ! [ -z "$VIRTUAL_ENV" ]; then
-        PYTHON_VIRTUALENV="$(_color "37" "42")[`basename \"$VIRTUAL_ENV\"`]$(_color)"
+        PYTHON_VIRTUALENV="$(_color "37" "42")foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;30" "42")${SEPARATOL}$(_color)"
     fi
 	
 	echo "$PYTHON_VIRTUALENV"

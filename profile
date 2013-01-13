@@ -26,9 +26,9 @@ function manp() {
 	man -t $1 | open -f -a /Applications/Preview.app
 }
 
-alias ll="ls -lahG"
+alias ls="ls -G"
+alias ll="ls -lah"
 alias less="less -MNR"
-#alias grep="grep -i --color=auto"
 export GREP_OPTIONS='--color=auto -n -i'
 
 # run sass with the cache location in /tmp to avoid turds
