@@ -59,7 +59,7 @@ function _gitStatus() {
 
 function _svnStatus() {
 	local SVN_STATUS_TEXT=''
-	local REVISION=$(svn info | awk '/^Revision:/{print $2}')
+	local REVISION=$(svn info 2>/dev/null | awk '/^Revision:/{print $2}')
 	
 	if ! [ -z "$REVISION" ]; then
 		SVN_STATUS_TEXT="$(_color "1;30" "46")${SEPARATOR}$(_color)$(_color "30" "46") svn r:${REVISION}$(_color)$(_color "36")${SEPARATOR}$(_color)";
