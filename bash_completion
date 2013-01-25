@@ -9,12 +9,5 @@ if [ -f /opt/local/share/git-core/git-prompt.sh ]; then
     . /opt/local/share/git-core/git-prompt.sh
 fi
 
-# Most SVN is monolithic, for now this is commented out until
-# I can figure out a good approach to determining how to display
-# repo names in the prompt
-# if [ -f /opt/local/etc/bash_completion.d/subversion ]; then
-# 	. /opt/local/etc/bash_completion.d/subversion
-# fi
-
 # look for homebrew bash completion
-# @TODO
+# @TODO - copy/paste from work computer
