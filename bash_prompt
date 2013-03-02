@@ -3,14 +3,34 @@
 # Colors from http://www.arwin.net/tech/bash.php
 
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
-	xterm-256color) color_prompt=yes;;
+    xterm-color) 
+		color_prompt=yes
+	;;
+	xterm-256color) 
+		color_prompt=yes
+	;;
 esac
 
 SEPARATOR="⮀"
 SEPARATOL="⮂"
 BRANCH="⭠"
 MASTER="☰"
+
+C_WHITE='37'
+C_BLACK='30'
+C_GREEN='32'
+C_CYAN='36'
+C_RED='31'
+
+C_BLACK_BOLD="1;$C_BLACK"
+C_GREEN_BOLD="1;$C_GREEN"
+C_CYAN_BOLD="1;$C_CYAN"
+C_RED_BOLD="1;$C_RED"
+
+C_BG_BLACK='40'
+C_BG_CYAN='46'
+C_BG_YELLOW='43'
+C_BG_GREEN='42'
 
 # pass foreground then background (optional)
 function _color() {
@@ -55,7 +75,7 @@ function _gitStatus() {
 			if [ "$GIT_STATUS_TEXT" == "master" ]; then
 				SYMBOL=$MASTER
 			fi
-			GIT_STATUS="$(_color "1;30" "42")${SEPARATOR}$(_color)$(_color "37" "42") ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color "32")${SEPARATOR}$(_color)"
+			GIT_STATUS="$(_color $C_BLACK_BOLD $C_BG_GREEN)${SEPARATOR}$(_color)$(_color $C_WHITE $C_BG_GREEN) ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color $C_GREEN)${SEPARATOR}$(_color)"
 		fi
 	fi
 	
@@ -68,7 +88,7 @@ function _svnStatus() {
 	
 	if ! [ -z "$REVISION" ]; then
 		local REPO_NAME=$(basename `svn info 2>/dev/null | awk '/^Repository Root:/{print $3}'`)
-		SVN_STATUS_TEXT="$(_color "1;30" "46")${SEPARATOR}$(_color)$(_color "30" "46") ${REPO_NAME} r:${REVISION}$(_color)$(_color "36")${SEPARATOR}$(_color)";
+		SVN_STATUS_TEXT="$(_color $C_BLACK $C_BG_CYAN)${SEPARATOR}$(_color)$(_color $C_BLACK $C_BG_CYAN) ${REPO_NAME} r:${REVISION}$(_color)$(_color $C_CYAN)${SEPARATOR}$(_color)";
 	fi
 	
 	echo "$SVN_STATUS_TEXT"
@@ -78,18 +98,20 @@ function _pythonVirtualenv() {
     local PYTHON_VIRTUALENV=""
     	
     if ! [ -z "$VIRTUAL_ENV" ]; then
-        PYTHON_VIRTUALENV="$(_color "37" "43")foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;30" "43")${SEPARATOL}$(_color)"
+        PYTHON_VIRTUALENV="$(_color $C_WHITE $C_BG_YELLOW)foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color $C_BLACK_BOLD $C_BG_YELLOW)${SEPARATOL}$(_color)"
     fi
 	
 	echo "$PYTHON_VIRTUALENV"
 }
 
-function _prompt() {
-	if ! [[ $? -eq 0 ]]; then
-		STATUS_COLOR="1;31"
-	fi
+function _prompt() {	
+	local LAST_RETURN=$?
 	
-	local STATUS_COLOR="1;32"
+	local STATUS_COLOR="$C_GREEN_BOLD"
+	
+	if ! [[ $LAST_RETURN -eq 0 ]]; then
+		STATUS_COLOR="$C_RED_BOLD"
+	fi
 
 	local LOCAL_HOSTNAME=`scutil --get LocalHostName`
 	local PYTHON_VIRTUALENV=$(_pythonVirtualenv)
@@ -97,14 +119,14 @@ function _prompt() {
 	local GIT_STATUS=$(_gitStatus)
 	local SVN_STATUS=$(_svnStatus)
 		
-	SCM_STATUS="$(_color "30")${SEPARATOR}$(_color)"
+	SCM_STATUS="$(_color $C_BLACK)${SEPARATOR}$(_color)"
 	if ! [ -z "$GIT_STATUS" ]; then
 		SCM_STATUS="$GIT_STATUS"
 	elif ! [ -z "$SVN_STATUS" ]; then
 		SCM_STATUS="$SVN_STATUS"
 	fi
 			
-	PROMPT="$(_color "40" "37")\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")\$$(_color) "
+	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")\$$(_color) "
 	PS1=${PYTHON_VIRTUALENV}${PROMPT}
 }
 
