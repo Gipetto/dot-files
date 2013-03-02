@@ -10,6 +10,7 @@ esac
 SEPARATOR="⮀"
 SEPARATOL="⮂"
 BRANCH="⭠"
+MASTER="☰"
 
 # pass foreground then background (optional)
 function _color() {
@@ -50,7 +51,11 @@ function _gitStatus() {
 		fi
 		
 		if [ $SHOW_GIT = 1 ]; then
-			GIT_STATUS="$(_color "1;30" "42")${SEPARATOR}$(_color)$(_color "37" "42") ${GIT_REPO}${BRANCH} ${GIT_STATUS_TEXT}$(_color)$(_color "32")${SEPARATOR}$(_color)"
+			SYMBOL=$BRANCH
+			if [ "$GIT_STATUS_TEXT" == "master" ]; then
+				SYMBOL=$MASTER
+			fi
+			GIT_STATUS="$(_color "1;30" "42")${SEPARATOR}$(_color)$(_color "37" "42") ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color "32")${SEPARATOR}$(_color)"
 		fi
 	fi
 	
@@ -62,7 +67,8 @@ function _svnStatus() {
 	local REVISION=$(svn info 2>/dev/null | awk '/^Revision:/{print $2}')
 	
 	if ! [ -z "$REVISION" ]; then
-		SVN_STATUS_TEXT="$(_color "1;30" "46")${SEPARATOR}$(_color)$(_color "30" "46") svn r:${REVISION}$(_color)$(_color "36")${SEPARATOR}$(_color)";
+		local REPO_NAME=$(basename `svn info 2>/dev/null | awk '/^Repository Root:/{print $3}'`)
+		SVN_STATUS_TEXT="$(_color "1;30" "46")${SEPARATOR}$(_color)$(_color "30" "46") ${REPO_NAME} r:${REVISION}$(_color)$(_color "36")${SEPARATOR}$(_color)";
 	fi
 	
 	echo "$SVN_STATUS_TEXT"
