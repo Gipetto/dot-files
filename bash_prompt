@@ -2,36 +2,6 @@
 # Requires Powerline patched fonts: https://gist.github.com/1595572
 # Colors from http://www.arwin.net/tech/bash.php
 
-case "$TERM" in
-    xterm-color) 
-		color_prompt=yes
-	;;
-	xterm-256color) 
-		color_prompt=yes
-	;;
-esac
-
-SEPARATOR="⮀"
-SEPARATOL="⮂"
-BRANCH="⭠"
-MASTER="☰"
-
-C_WHITE='37'
-C_BLACK='30'
-C_GREEN='32'
-C_CYAN='36'
-C_RED='31'
-
-C_BLACK_BOLD="1;$C_BLACK"
-C_GREEN_BOLD="1;$C_GREEN"
-C_CYAN_BOLD="1;$C_CYAN"
-C_RED_BOLD="1;$C_RED"
-
-C_BG_BLACK='40'
-C_BG_CYAN='46'
-C_BG_YELLOW='43'
-C_BG_GREEN='42'
-
 # pass foreground then background (optional)
 function _color() {
 	local PROMPT_COLOR_OUTPUT="\[\e[0m\]"
@@ -75,7 +45,7 @@ function _gitStatus() {
 			if [ "$GIT_STATUS_TEXT" == "master" ]; then
 				SYMBOL=$MASTER
 			fi
-			GIT_STATUS="$(_color $C_BLACK_BOLD $C_BG_GREEN)${SEPARATOR}$(_color)$(_color $C_WHITE $C_BG_GREEN) ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color $C_GREEN)${SEPARATOR}$(_color)"
+			GIT_STATUS="$(_color "1;$C_BLACK" $C_BG_GREEN)${SEPARATOR}$(_color)$(_color $C_WHITE $C_BG_GREEN) ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color $C_GREEN)${SEPARATOR}$(_color)"
 		fi
 	fi
 	
@@ -98,7 +68,7 @@ function _pythonVirtualenv() {
     local PYTHON_VIRTUALENV=""
     	
     if ! [ -z "$VIRTUAL_ENV" ]; then
-        PYTHON_VIRTUALENV="$(_color $C_WHITE $C_BG_YELLOW)foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color $C_BLACK_BOLD $C_BG_YELLOW)${SEPARATOL}$(_color)"
+        PYTHON_VIRTUALENV="$(_color $C_WHITE $C_BG_YELLOW)foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;$C_BLACK" $C_BG_YELLOW)${SEPARATOL}$(_color)"
     fi
 	
 	echo "$PYTHON_VIRTUALENV"
@@ -107,10 +77,36 @@ function _pythonVirtualenv() {
 function _prompt() {	
 	local LAST_RETURN=$?
 	
-	local STATUS_COLOR="$C_GREEN_BOLD"
+	# Symbols
+	local SEPARATOR="⮀"
+	local SEPARATOL="⮂"
+	local BRANCH="⭠"
+	local MASTER="☰"
+
+	# Text Colors
+	local C_BLACK='30'
+	local C_RED='31'
+	local C_GREEN='32'
+	local C_YELLOW='33'
+	local C_BLUE='34'
+	local C_MAGENTA='35'
+	local C_CYAN='36'
+	local C_WHITE='37'
+
+	# Background Colors
+	local C_BG_BLACK='40'
+	local C_BG_RED='41'
+	local C_BG_GREEN='42'
+	local C_BG_YELLOW='43'
+	local C_BG_BLUE='44'
+	local C_BG_MAGENTA='45'
+	local C_BG_CYAN='46'
+	local C_BG_WHITE='47'
+	
+	local STATUS_COLOR="1;$C_GREEN"
 	
 	if ! [[ $LAST_RETURN -eq 0 ]]; then
-		STATUS_COLOR="$C_RED_BOLD"
+		STATUS_COLOR="1;$C_RED"
 	fi
 
 	local LOCAL_HOSTNAME=`scutil --get LocalHostName`
@@ -130,9 +126,19 @@ function _prompt() {
 	PS1=${PYTHON_VIRTUALENV}${PROMPT}
 }
 
+case "$TERM" in
+    xterm-color) 
+		color_prompt=yes
+	;;
+	xterm-256color) 
+		color_prompt=yes
+	;;
+esac
+
 if [ "$color_prompt" = yes ]; then
     PROMPT_COMMAND=_prompt
 else
 	PS1='\[\e[1;32m\]\u@\h \W:$(__git_ps1) \$\[\e[0m\] '
 fi
+
 unset color_prompt
