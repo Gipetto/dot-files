@@ -2,6 +2,13 @@
 # Requires Powerline patched fonts: https://gist.github.com/1595572
 # Colors from http://www.arwin.net/tech/bash.php
 
+# For RVM prompts to work properly you should set your default RVM env to be
+# the system provided ruby, ie:
+#     rvm --default use system
+#
+# @TODO: compare local vs. system rvm status to see if there's a difference so
+#        that we don't have to set the default to "system"
+
 # pass foreground then background (optional)
 function _color() {
 	local PROMPT_COLOR_OUTPUT="\[\e[0m\]"
