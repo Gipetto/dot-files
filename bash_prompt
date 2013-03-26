@@ -58,7 +58,7 @@ function _svnStatus() {
 	
 	if ! [ -z "$REVISION" ]; then
 		local REPO_NAME=$(basename `svn info 2>/dev/null | awk '/^Repository Root:/{print $3}'`)
-		SVN_STATUS_TEXT="$(_color $C_BLACK $C_BG_CYAN)${SEPARATOR}$(_color)$(_color $C_BLACK $C_BG_CYAN) ${REPO_NAME} r:${REVISION}$(_color)$(_color $C_CYAN)${SEPARATOR}$(_color)";
+		SVN_STATUS_TEXT="$(_color $C_BLACK $C_BG_CYAN)${SEPARATOR}$(_color)$(_color $C_BLACK $C_BG_CYAN) ${REPO_NAME} r:${REVISION}$(_color)$(_color $C_CYAN)${SEPARATOR}$(_color)"
 	fi
 	
 	echo "$SVN_STATUS_TEXT"
@@ -68,10 +68,25 @@ function _pythonVirtualenv() {
     local PYTHON_VIRTUALENV=""
     	
     if ! [ -z "$VIRTUAL_ENV" ]; then
-        PYTHON_VIRTUALENV="$(_color $C_WHITE $C_BG_YELLOW)foo`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;$C_BLACK" $C_BG_YELLOW)${SEPARATOL}$(_color)"
+        PYTHON_VIRTUALENV="$(_color $C_WHITE $C_BG_YELLOW)`basename \"$VIRTUAL_ENV\"` $(_color)$(_color "1;$C_BLACK" $C_BG_YELLOW)${SEPARATOL}$(_color)"
     fi
 	
 	echo "$PYTHON_VIRTUALENV"
+}
+
+function _rvmStatus() {
+	if ! [ `type -t ps1_rvm`"" == 'function' ]; then
+		return
+	fi
+	
+	local RVM_STATUS=''
+	local RVM_STATUS_TEXT="$(ps1_rvm)"
+	
+	if [[ -n "$RVM_STATUS_TEXT" ]]; then
+		RVM_STATUS="$(_color "1;$C_BLACK" $C_BG_RED)${RVM_STATUS_TEXT}$(_color)$(_color "1;$C_BLACK" $C_BG_RED)${SEPARATOL}$(_color)"
+	fi
+	
+	echo "$RVM_STATUS"
 }
 
 function _prompt() {	
@@ -114,7 +129,9 @@ function _prompt() {
 
 	local GIT_STATUS=$(_gitStatus)
 	local SVN_STATUS=$(_svnStatus)
-		
+	
+	local RVM_STATUS=$(_rvmStatus)
+	
 	SCM_STATUS="$(_color $C_BLACK)${SEPARATOR}$(_color)"
 	if ! [ -z "$GIT_STATUS" ]; then
 		SCM_STATUS="$GIT_STATUS"
@@ -123,7 +140,7 @@ function _prompt() {
 	fi
 			
 	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")\$$(_color) "
-	PS1=${PYTHON_VIRTUALENV}${PROMPT}
+	PS1=${RVM_STATUS}${PYTHON_VIRTUALENV}${PROMPT}
 }
 
 case "$TERM" in
