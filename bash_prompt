@@ -90,7 +90,7 @@ function _rvmStatus() {
 	local RVM_STATUS_TEXT="$(_ps1_rvm)"
 	
 	if [[ -n "$RVM_STATUS_TEXT" ]]; then
-		RVM_STATUS="$(_color "$C_WHITE" $C_BG_RED)${RVM_STATUS_TEXT}$(_color)$(_color "1;$C_BLACK" $C_BG_RED)${SEPARATOL}$(_color)"
+		RVM_STATUS="$(_color "$C_WHITE" $C_BG_RED)${RVM_STATUS_TEXT} $(_color)$(_color "1;$C_BLACK" $C_BG_RED)${SEPARATOL}$(_color)"
 	fi
 	
 	echo "$RVM_STATUS"
