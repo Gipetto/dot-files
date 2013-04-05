@@ -8,6 +8,10 @@ if (PHP_SAPI === 'cli' && function_exists('xdebug_disable')) {
 	xdebug_disable();
 }
 
+if (PHP_SAPI === 'cli' && strpos($_SERVER['_'], 'bin/phpunit') !== false) {
+	error_reporting(E_ERROR);
+}
+
 function pp() {
 	prettyDumper::create(func_get_args(), 'print_r');
 }
