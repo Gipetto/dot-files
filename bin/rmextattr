@@ -1,0 +1,10 @@
+#! /bin/bash
+
+find . | while read filename
+do
+     while read attr
+     do
+           echo "removing ${attr} from ${filename}"
+           xattr -d "${attr}" "${filename}" 
+     done < <(xattr "${filename}")
+done

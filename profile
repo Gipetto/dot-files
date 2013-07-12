@@ -6,6 +6,12 @@ DOT_FILES_DIR="$( dirname "$BASH_SOURCE[0]" )"
 . "$DOT_FILES_DIR/bash_completion"
 . "$DOT_FILES_DIR/bash_prompt"
 
+# Add included bin directory to the path
+export PATH="$PATH:$DOT_FILES_DIR/bin"
+
+export EDITOR="vim"
+export SVN_EDITOR="$EDITOR"
+
 # longer history
 export HISTSIZE=10000
 # ignore commands that lead with a space, ignore dups
@@ -32,7 +38,7 @@ alias less="less -MNR"
 export GREP_OPTIONS='--color=auto -n -i'
 
 # run sass with the cache location in /tmp to avoid turds
-alias sassy="sass --unix-newlines --cache-location=/tmp/scss"
+alias sassy='sass --unix-newlines --cache-location /tmp/sass-cache --watch scss:css $@'
 
 # diff the current project and open the diff in TextMate
 alias _diff="git diff | mate"
@@ -52,23 +58,6 @@ function _cd {
 function _pull {
 	cd ~/Projects/repo-name && git pull && cd -
 	# repeat as necessary...
-}
-
-# execute a curl command and pipe the response off to a JSON formatter
-curlj() {
-	curl $@ | python -mjson.tool
-}
-
-# remove a single line from a file
-# handy for when you need to kill a line after an AWS host has changed
-rmline() {
-	if ! [ "$#" = "2" ]; then
-		echo 'Invalid paramter count';
-		echo 'Usage: rmline line-num filename'
-		return;
-	fi
-	
-	sed -i 0 "$1d" $2
 }
 
 _vnc() {

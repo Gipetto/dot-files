@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if ! [ "$#" = "2" ]; then
+	echo 'Invalid paramter count';
+	echo 'Usage: rmline line-num filename'
+	return;
+fi
+
+sed -i 0 "$1d" $2

@@ -1,0 +1,92 @@
+#! /bin/bash
+
+set -e
+
+usage() {
+	cat <<EOF
+dump-that-floppy [-h] [-g]
+
+This script imports sql files in to your local MySQL server.
+Navigate to the folder that contains your sql files and run
+this script. 
+
+Default option is dry run. Use the `-g` flag to actually import.
+
+If files are in the `database.table.sql` file name format then
+the table named in the file name will be truncated first.
+
+OPTIONS:
+  -h  This help message
+  -g  Perform import
+  
+EOF
+}
+
+GO=
+TRUNCATE=
+
+while getopts "hg" OPTION
+do
+	case $OPTION in
+		g)
+			GO=1
+			;;
+		h)
+			usage
+			exit 1
+			;;
+	esac
+done
+
+if [[ -z $GO ]]; then
+	echo ""
+	echo "****** DRY RUN ******"
+	echo "run with '-g' to perform import"
+	echo ""
+fi
+
+for FILE in *
+do	
+	DB=`echo "$FILE" | cut -d . -f 1 | cut -d "-" -f 2`
+	TABLE=`echo "$FILE" | cut -d . -f 2`
+
+	if [[ $TABLE = 'sql' ]]; then
+		echo "File '$FILE' not in 'database.table.sql' format. NOT TRUNCATING."
+		continue
+	fi
+
+	echo "-- TRUNCATING: $DB $TABLE"
+				
+	if [[ $GO = 1 ]]; then
+		mysql -uroot "$DB" -e "truncate $TABLE;"
+		echo "$DB $TABLE truncated."
+	else
+		echo "COMMAND: mysql -uroot '$DB' -e 'truncate $TABLE;'"
+	fi
+
+	echo ""
+done
+
+echo ""
+
+for FILE in *
+do
+	echo "-- IMPORTING: $FILE"
+	
+	DB=`echo "$FILE" | cut -d . -f 1 | cut -d "-" -f 2`
+	TABLE=`echo "$FILE" | cut -d . -f 2`
+	
+	echo "Importing data"
+	
+	if [[ $GO = 1 ]]; then
+		mysql -uroot "$DB" < "$FILE"
+	else
+		echo "COMMAND: mysql -uroot '$DB' < '$FILE'"
+	fi
+	
+	echo "Import '$FILE' complete"
+	echo ""
+done
+
+echo ""
+echo "-- Import complete --"

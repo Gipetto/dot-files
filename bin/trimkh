@@ -1,0 +1,7 @@
+#! /bin/bash
+
+if ! [ "$#" = "1" ]; then
+	echo 'Invalid parameter count'
+	echo 'Usage: trimkh line-num'
+fi
+rmline $1 ~/.ssh/known_hosts
