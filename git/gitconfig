@@ -34,5 +34,6 @@
   gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
   cm = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/compare/master...$(git rev-parse --abbrev-ref HEAD)#files_bucket\""
   subup = "!(git submodule sync; git submodule update --init --recursive;)"
+  diffm = "!git diff | mate"
 [push]
   default = current

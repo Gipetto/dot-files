@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if ! [ $1 ]; then
+	echo 'No man file given';
+	echo 'Usage: manp man-page'
+	return;
+fi
+
+man -t $1 | open -f -a /Applications/Preview.app

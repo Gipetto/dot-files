@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if ! [ $1 ]; then
+	echo 'No destination given';
+	echo 'Usage: rvnc user@host.com'
+	return;
+fi
+
+ssh -C -c blowfish -f -L 1202:localhost:5900 $1 sleep 10; open vnc://localhost:1202;

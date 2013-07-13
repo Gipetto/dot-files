@@ -1,0 +1,8 @@
+#! /bin/bash
+
+# pretty log tailing
+function trimlog() {
+	perl -pe 's/\[error\]\s+\[client.*?\]\s+//; s/, referer:.*//'
+}
+
+sudo tail -n 50 -f /var/log/httpd/error_log | trimlog
