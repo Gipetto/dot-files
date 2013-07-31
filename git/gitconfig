@@ -23,6 +23,7 @@
   branch = magenta
 [alias]
   alias = "!git config --get-regexp 'alias.*' | sed -e \"s|^alias\\.||\""
+  branchlog = "!git log --not HEAD"
   co = checkout
   child = "!sh -c 'git push origin $(git rev-parse --abbrev-ref HEAD); git checkout --track -b $1 origin/$(git rev-parse --abbrev-ref HEAD);' - "
   ci = commit
@@ -37,7 +38,7 @@
   pb = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
   pick = cherry-pick
   pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
-  prc = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD@{upstream})...$(git rev-parse --abbrev-ref HEAD)\""
+  prc = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD@{upstream} | sed 's/origin\\///')...$(git rev-parse --abbrev-ref HEAD)\""
   subup = "!(git submodule sync; git submodule update --init --recursive;)"
   st = status
   unstage = reset HEAD --
