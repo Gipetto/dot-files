@@ -1,6 +1,6 @@
 # Dot Files
 
-My commonly used bash setup.
+THIS README IS HOPELESSLY OUT OF DATE RIGHT NOW. Just browse the repo if you're interested.
 
 ## Configuration
 
