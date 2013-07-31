@@ -21,6 +21,8 @@ shopt -s histappend
 #ignore some files for tab completion
 export FIGNORE=$FIGNORE:.hi:.pyc:.o:.beam:.dSYM:.un~
 
+export LESSCHARSET="utf-8"
+
 # update the locate database
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 

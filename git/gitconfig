@@ -1,8 +1,9 @@
 [core]
-  pager = less -r
+  pager = less -FXr
   quotepath = false
-  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+  whitespace = indent-with-non-tab,space-before-tab,trailing-space,cr-at-eol				
   excludesfile = gitignore
+  editor = vim
 [color]
   ui = true
 [color "branch"]
@@ -21,19 +22,39 @@
   untracked = cyan reverse
   branch = magenta
 [alias]
+  alias = "!git config --get-regexp 'alias.*' | sed -e \"s|^alias\\.||\""
   co = checkout
-  st = status
+  child = "!sh -c 'git push origin $(git rev-parse --abbrev-ref HEAD); git checkout --track -b $1 origin/$(git rev-parse --abbrev-ref HEAD);' - "
   ci = commit
   cia = commit --amend
-  unstage = reset HEAD --
+  changes = diff --name-status -r
+  cm = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/compare/master...$(git rev-parse --abbrev-ref HEAD)#files_bucket\""
+  diffc = diff --cached
+  diffm = "!git diff | mate"
+  gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
   last = log -1 HEAD
   lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
   pb = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
-  up = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
+  pick = cherry-pick
   pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
-  gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
-  cm = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/compare/master...$(git rev-parse --abbrev-ref HEAD)#files_bucket\""
+  prc = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD@{upstream})...$(git rev-parse --abbrev-ref HEAD)\""
   subup = "!(git submodule sync; git submodule update --init --recursive;)"
-  diffm = "!git diff | mate"
+  st = status
+  unstage = reset HEAD --
+  undo = reset --soft HEAD@{1}
+  up = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
 [push]
   default = current
+[diff]
+  algorithm = patience
+  renames = copies
+[web]
+  browser = chromium
+[branch]
+  autosetupmerge = true
+[rerere]
+  enabled = true
+[merge]
+  stat = true
+[pager]
+  color = true

@@ -64,3 +64,10 @@ nnoremap <C-L> :call g:ToggleNuMode()<cr>
 "highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 "match OverLength /\%81v.*/
 "let c_space_errors=1
+
+" powerline
+" let g:Powerline_symbols = 'fancy'
+" set rtp+=/Users/shawn/Projects/powerline/powerline/bindings/vim
+" set laststatus=2
+" set antialias
+" set guifont=Monaco\ for\ Powerline\ 12
