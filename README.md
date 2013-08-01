@@ -4,18 +4,51 @@ THIS README IS HOPELESSLY OUT OF DATE RIGHT NOW. Just browse the repo if you're 
 
 ## Configuration
 
+Installer TBD
 
 ### RC files
 
 For most files you'll just symlink a copy in to your home directory
 
-    $ cd ~/
-	$ ln -s /path/to/dot-files/vimrc .vimrc 
+	$ ln -s /path/to/dot-files/vimrc ~/.vimrc 
 
-For the profile simply add one line to your `.profile` to source the provided profile:
+For the profile simply add one line to your `~/.profile` to source the provided profile:
 
     . /path/to/dot-files/profile
 
+### Git
+
+As of Git 1.7.10 the `.gitconfig` file has an `[include]` directive, so you can augment your local config with some shared config.
+
+Simply add this to your global `~/.gitconfig`:
+
+	[include]
+		path = /path/to/dot-files/git/gitconfig
+		
+#### Aliases
+
+- alias: list the currently know aliases
+- branchlog: not functional
+- co: checkout
+- child: create a new branch off of the current branch and track its remote
+- ci: commit
+- cia: ammend last commit
+- changes: show changed files
+- cm: open compare link in GitHub for master...current-branch
+- diffc: diff and include cached items
+- diffm: open diff in TextMate
+- gh: open GitHub at head of current branch
+- last: show last commit
+- lg: pretty log output
+- pb: push current branch
+- pick: cherry-pick
+- pr: open a pull request for the current branch against master
+- prc: open a pull request for the current branch against its tracking branch
+- subup: init submodules
+- st: status
+- unstage: remove all files staged for commit, do not revert any changes
+- undo: reset the current branch to last local HEAD
+- up: pull current branch from remote
 
 ### PHP Helpers
 
