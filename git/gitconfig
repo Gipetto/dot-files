@@ -31,7 +31,7 @@
   changes = diff --name-status -r
   cm = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/compare/master...$(git rev-parse --abbrev-ref HEAD)#files_bucket\""
   diffc = diff --cached
-  diffm = "!git diff $@ | mate | -"
+  diffm = "!f() { git diff $@ | mate; }; f "
   gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
   last = log -1 HEAD
   lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
