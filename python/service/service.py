@@ -42,17 +42,18 @@ if action is None:
 
 try:
     plist_json = read_plist(service)
-    # print plist_json
     
-    if action == 'debug':
-        command_debug(plist_json)
-    elif action == 'start':
+    if action == 'start':
         launchctl_start(plist_json.Label)
     elif action == 'stop':
         launchctl_stop(plist_json.Label)
     elif action == 'status':
         print 'status'
-    
+    elif action == 'debug':
+        command_debug(plist_json)
+    elif action == 'dump':
+        command_dump(plist_json)
+        
 except:
     print 'An error has occurred: {}'.format(sys.exc_info()[0])
     sys.exit(os.EX_SOFTWARE)

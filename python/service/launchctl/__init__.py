@@ -3,6 +3,7 @@ from glob import glob
 import plistlib
 import os
 import sys
+import json
 
 launchctl = '/bin/launchctl'
 launch_daemons = '/Library/launchDaemons'
@@ -97,3 +98,9 @@ def command_debug(plist_json):
     call(program_args)
 
     sys.exit()
+    
+def command_dump(plist_json):
+    """
+    Dump the raw json plist data
+    """
+    print json.dumps(plist_json, indent=4)
