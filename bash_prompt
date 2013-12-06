@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Requires Powerline patched fonts: https://gist.github.com/1595572
 # Colors from http://www.arwin.net/tech/bash.php
 
