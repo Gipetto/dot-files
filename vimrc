@@ -3,6 +3,9 @@
 " add to the runtime path to include plugins
 set runtimepath+=$HOME/.vim/vim-markdown
 
+set encoding=utf-8
+set showcmd
+
 " highlight syntax
 syntax on
 
@@ -19,6 +22,7 @@ set sm
 
 " more readable tab stop on the command line
 set tabstop=4
+set backspace=indent,eol,start
 
 " always show 4 lines at the bottom of the screen
 set scrolloff=4
@@ -26,6 +30,8 @@ set scrolloff=4
 " highlight search items
 set hlsearch
 set incsearch
+set ignorecase
+set smartcase
 
 " auto-indent code
 set autoindent

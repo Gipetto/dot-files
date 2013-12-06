@@ -32,7 +32,7 @@ alias flushdns="dscacheutil -flushcache"
 alias ls="ls -G"
 alias ll="ls -lah"
 alias less="less -MNR"
-export GREP_OPTIONS='--color=auto -n -i'
+#export GREP_OPTIONS='--color=auto -n -i'
 
 # change directories down by the number of the arg passed, ie: _cd 2
 HAVE_CD=`type -t _cd`
