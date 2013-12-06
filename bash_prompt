@@ -145,9 +145,9 @@ function _prompt() {
 	elif ! [ -z "$SVN_STATUS" ]; then
 		SCM_STATUS="$SVN_STATUS"
 	fi
-			
+				
 	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")\$$(_color) "
-	PS1=${RVM_STATUS}${PYTHON_VIRTUALENV}${PROMPT}
+	PS1=${RVM_STATUS}${PYTHON_VIRTUALENV}${PROMPT}	
 }
 
 case "$TERM" in
