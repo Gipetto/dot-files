@@ -53,7 +53,7 @@
 [web]
   browser = chromium
 [branch]
-  autosetupmerge = true
+  autosetupmerge = always
 [rerere]
   enabled = true
 [merge]
