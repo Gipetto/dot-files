@@ -10,4 +10,6 @@ if [ -f /opt/local/share/git-core/git-prompt.sh ]; then
 fi
 
 # look for homebrew bash completion
-# @TODO - copy/paste from work computer
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
