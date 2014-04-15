@@ -24,6 +24,7 @@
 [alias]
   alias = "!git config --get-regexp 'alias.*' | sed -e \"s|^alias\\.||\""
   branchlog = "!git log --not HEAD"
+  cb = "!(/usr/bin/env echo -n \"$(git rev-parse --abbrev-ref HEAD)\" | pbcopy; echo `tput setaf 5`'Branch name copied to clipboard'`tput sgr0`)"
   co = checkout
   child = "!sh -c 'git push origin $(git rev-parse --abbrev-ref HEAD); git checkout --track -b $1 origin/$(git rev-parse --abbrev-ref HEAD);' - "
   ci = commit
