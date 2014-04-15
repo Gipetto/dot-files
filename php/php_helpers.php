@@ -45,15 +45,33 @@ class prettyDumper {
 	);
 		
 	private static $js = '
-<script type="text/javascript"> 
-	var _body = document.getElementsByTagName("body")[0];
-	_body.insertBefore(document.getElementById("%s"), _body.firstChild);
+<script type="text/javascript">
+	function _moveDumps() {
+		var _body = document.getElementsByTagName("body")[0],
+			_dumps = document.getElementsByClassName("pretty-dumper"),
+			_insertBefore = _body.firstChild;
+
+		for (k in _dumps) {
+			if (_dumps[k].hasOwnProperty("nodeName")) {
+				_body.insertBefore(_dumps[k], _insertBefore);
+			}
+		}
+	}
+
+	if (window.addEventListener) {
+	  window.addEventListener("load", _moveDumps, false);
+	}
+	else if (window.attachEvent) {
+	  window.attachEvent("onload", _moveDumps );
+	}
 </script>';
 
-	private static $pre = '<pre id="%s" style="%s">%s</pre>';
+	private static $pre = '<pre id="%s" style="%s" class="pretty-dumper">%s</pre>';
 
 	private $vars;
 	private $func;
+
+	private static $count = 0;
 
 	public static function create($vars, $func) {
 		return self::$instances[] = new self($vars, $func);
@@ -96,6 +114,9 @@ class prettyDumper {
 		$msg = self::buildMessage($this->vars, $this->func);
 		$id = implode('-', array($this->func, mt_rand()));
 		printf(self::$pre, $id, implode(';', self::$styles), htmlspecialchars($msg, ENT_COMPAT, 'UTF-8'));
-		printf(self::$js, $id);
+
+		if (self::$count++ == 0) {
+			echo self::$js;
+		}
 	}
 }
