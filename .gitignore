@@ -1,3 +1,4 @@
 .idea
 .tm_properties
 .DS_Store
+*.pyc
