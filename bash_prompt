@@ -135,7 +135,7 @@ function _prompt() {
 	local PYTHON_VIRTUALENV=$(_pythonVirtualenv)
 
 	local GIT_STATUS=$(_gitStatus)
-	local SVN_STATUS=$(_svnStatus)
+	#local SVN_STATUS=$(_svnStatus)
 	
 	local RVM_STATUS=$(_rvmStatus)
 	
@@ -151,6 +151,9 @@ function _prompt() {
 }
 
 case "$TERM" in
+	xterm)
+		color_prompt=yes
+	;;
     xterm-color) 
 		color_prompt=yes
 	;;

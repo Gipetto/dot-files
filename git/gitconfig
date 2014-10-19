@@ -5,22 +5,11 @@
   excludesfile = gitignore
   editor = vim
 [color]
-  ui = true
+  ui = auto
 [color "branch"]
   current = green bold
   local = black
   remote = yellow
-[color "diff"]
-  meta = yellow bold
-  frag = magenta bold
-  old = red
-  new = green
-  whitespace = white
-[color "status"]
-  added = yellow
-  changed = green
-  untracked = cyan reverse
-  branch = magenta
 [alias]
   alias = "!git config --get-regexp 'alias.*' | sed -e \"s|^alias\\.||\""
   branchlog = "!git log --not HEAD"
@@ -43,11 +32,12 @@
   prc = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD@{upstream} | sed 's/origin\\///')...$(git rev-parse --abbrev-ref HEAD)\""
   subup = "!(git submodule sync; git submodule update --init --recursive;)"
   st = status
+  tagd = "!git log --tags --simplify-by-decoration --pretty=\"format:%ai %d\""
   unstage = reset HEAD --
   undo = reset --soft HEAD@{1}
   up = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
 [push]
-  default = current
+  default = simple
 [diff]
   algorithm = patience
   renames = copies
