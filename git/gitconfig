@@ -1,7 +1,7 @@
 [core]
   pager = less -FXr
   quotepath = false
-  whitespace = indent-with-non-tab,space-before-tab,trailing-space,cr-at-eol				
+  whitespace = space-before-tab,trailing-space,cr-at-eol
   excludesfile = gitignore
   editor = vim
 [color]
@@ -25,6 +25,7 @@
   gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
   last = log -1 HEAD
   lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
+  llg = "!git log --pretty=format:'%Cred%h%Creset - %Cblue%an%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' $* | sed -Ee 's/(^[^<]*), [[:digit:]]+ .*months?\\)/\\1)/' | less -FXRS"
   pb = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
   pick = cherry-pick
   pul = pull
