@@ -1,5 +1,5 @@
 [core]
-  pager = less -FXr
+  pager = bash -lc 'less -FXr' -
   quotepath = false
   whitespace = space-before-tab,trailing-space,cr-at-eol
   excludesfile = gitignore
