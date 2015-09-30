@@ -24,7 +24,10 @@ function _color() {
 	echo $PROMPT_COLOR_OUTPUT
 }
 
-function _gitStatus() {	
+function _gitStatus() {
+	# bail if we're not inside a git repo
+	git rev-parse --is-inside-work-tree &>/dev/null || return
+		
 	if ! [ `type -t __git_ps1`"" == 'function' ]; then
 		return
 	fi
@@ -100,10 +103,10 @@ function _prompt() {
 	local LAST_RETURN=$?
 	
 	# Symbols
-	local SEPARATOR="⮀"
-	local SEPARATOL="⮂"
-	local BRANCH="⭠"
-	local MASTER="☰"
+	local SEPARATOR=""
+	local SEPARATOL=""
+	local BRANCH=""
+	local MASTER="≡"
 
 	# Text Colors
 	local C_BLACK='30'
@@ -135,9 +138,10 @@ function _prompt() {
 	local PYTHON_VIRTUALENV=$(_pythonVirtualenv)
 
 	local GIT_STATUS=$(_gitStatus)
-	#local SVN_STATUS=$(_svnStatus)
 	
-	local RVM_STATUS=$(_rvmStatus)
+	# not currently needed.
+	#local SVN_STATUS=$(_svnStatus)
+	#local RVM_STATUS=$(_rvmStatus)
 	
 	SCM_STATUS="$(_color $C_BLACK)${SEPARATOR}$(_color)"
 	if ! [ -z "$GIT_STATUS" ]; then
@@ -146,7 +150,7 @@ function _prompt() {
 		SCM_STATUS="$SVN_STATUS"
 	fi
 				
-	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")\$$(_color) "
+	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")⚡$(_color) "
 	PS1=${RVM_STATUS}${PYTHON_VIRTUALENV}${PROMPT}	
 }
 
