@@ -6,6 +6,9 @@ DOT_FILES_DIR="$( dirname "$BASH_SOURCE[0]" )"
 . "$DOT_FILES_DIR/bash_completion"
 . "$DOT_FILES_DIR/bash_prompt"
 
+# z seems pretty cool github.com/rupa/z
+. /usr/local/etc/profile.d/z.sh
+
 # Add included bin directory to the path
 export PATH="$PATH:$DOT_FILES_DIR/bin"
 
@@ -33,26 +36,3 @@ alias ls="ls -G"
 alias ll="ls -lah"
 alias less="less -MNR"
 #export GREP_OPTIONS='--color=auto -n -i'
-
-# change directories down by the number of the arg passed, ie: _cd 2
-HAVE_CD=`type -t _cd`
-if [[ -z $HAVE_CD ]]; then
-	function _cd {
-		if [ $1 ]; then NUM=$1; else NUM=1; fi
-		for (( i=1; i<=$NUM; i++)); do cd ../; done
-	}
-fi
-
-# update git repositories without leaving the current directory
-# handy if your project is an amalgamation of different repos
-HAVE_PULL=`type -t _pull`
-if [[ -z $HAVE_PULL ]]; then
-	function _pull {
-		cd ~/Projects/repo-name && git pull && cd -
-		# repeat as necessary...
-	}
-fi
-
-dirsize() {
-	sudo find . ! -name . -type d -prune -exec du -hs {} \;
-}

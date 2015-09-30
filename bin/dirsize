@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo find . ! -name . -type d -prune -exec du -hs {} \;
