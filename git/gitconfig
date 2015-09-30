@@ -1,5 +1,5 @@
 [core]
-  pager = bash -lc 'less -FXr' -
+  pager = bash -lc 'diff_cleanup_output | less -FXr' -
   quotepath = false
   whitespace = space-before-tab,trailing-space,cr-at-eol
   excludesfile = gitignore
@@ -10,6 +10,8 @@
   current = green bold
   local = black
   remote = yellow
+[color "diff"]
+  meta = white bold
 [alias]
   alias = "!git config --get-regexp 'alias.*' | sed -e \"s|^alias\\.||\""
   branchlog = "!git log --not HEAD"
