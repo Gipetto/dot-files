@@ -1,32 +1,32 @@
 # TextMate 2 Default Settings: https://gist.github.com/1478685
-# exclude					= "{$exclude,*.tmproj,.DS_Store,.git,.svn,.gitignore}"
-# excludeDirectories		= "{$excludeDirectories,.git,.svn}"
-# excludeInBrowser		= "{$excludeInBrowser,.gitignore}"
-# excludeInFolderSearch	= "{$excludeInFolderSearch,log,logs,vendor,tmp}"
+# exclude               = "{$exclude,*.tmproj,.DS_Store,.git,.svn,.gitignore}"
+# excludeDirectories    = "{$excludeDirectories,.git,.svn}"
+# excludeInBrowser      = "{$excludeInBrowser,.gitignore}"
+# excludeInFolderSearch = "{$excludeInFolderSearch,log,logs,vendor,tmp}"
 
-windowTitle         = "$TM_DISPLAYNAME — ${TM_DIRECTORY/^.*\///}"
+windowTitle  = "$TM_DISPLAYNAME — ${TM_DIRECTORY/^.*\///}"
 
 [ text ]
-showInvisibles		= false
-softWrap            = true
-wrapColumn          = 100
-softTabs            = false
-tabSize             = 4
+showInvisibles = false
+softWrap = true
+wrapColumn = 100
+softTabs = false
+tabSize = 4
 
 [ text.html.markdown ]
-softWrap            = true
-wrapColumn          = "Use Window Frame"
-softTabs            = false
-tabSize             = 4
+softWrap = true
+wrapColumn = "Use Window Frame"
+softTabs = false
+tabSize = 4
 
 [ attr.untitled ]
-fileType				= 'source.php'
+fileType = 'source.php'
 
 [ *.md ]
-fileType				= 'text.html.markdown'
+fileType = 'text.html.markdown'
 
 [ *.mdown ]
-fileType				= 'text.html.markdown'
+fileType = 'text.html.markdown'
 
 [ *.txt ]
-fileType				= 'text.html.markdown'
+fileType = 'text.html.markdown'
