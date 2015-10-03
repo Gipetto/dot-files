@@ -1,0 +1,18 @@
+#!/bin/bash
+
+## Print a horizontal rule
+function rule () {
+	printf "%$(tput cols)s\n" | tr " " "─"
+}
+
+color_code_regex=$'(\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K])'
+newline=$'\x0A'
+_rule=$(rule)
+
+# embellesh the unified patch diff header
+# leading rule
+sed -E "s/^($color_code_regex)(diff --git .*)$/\\1$_rule\\5/g" | \
+# trailing rule
+sed -E "s/^($color_code_regex)(\+\+\+.*)$/\1\5\\1\\$newline$_rule/"  | \
+# leading +/- indicators
+sed -E "s/^($color_code_regex)[\+\-]/\1 /g"

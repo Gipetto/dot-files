@@ -1,5 +1,5 @@
 [core]
-  pager = bash -lc 'diff_cleanup_output | less -FXr' -
+  pager = bash -lc 'git-diff-cleanup-output | less -FXr' -
   quotepath = false
   whitespace = space-before-tab,trailing-space,cr-at-eol
   excludesfile = gitignore
