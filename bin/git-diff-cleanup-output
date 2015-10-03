@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# gussy up function for git diff alias (defined in git/gitconfig)
+# modified from github.com/paulirish/dotfiles
 
 ## Print a horizontal rule
 function rule () {
@@ -14,5 +17,5 @@ _rule=$(rule)
 sed -E "s/^($color_code_regex)(diff --git .*)$/\\1$_rule\\5/g" | \
 # trailing rule
 sed -E "s/^($color_code_regex)(\+\+\+.*)$/\1\5\\1\\$newline$_rule/"  | \
-# leading +/- indicators
+# remove leading +/- indicators
 sed -E "s/^($color_code_regex)[\+\-]/\1 /g"
