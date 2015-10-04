@@ -9,6 +9,8 @@
 # @TODO: compare local vs. system rvm status to see if there's a difference so
 #        that we don't have to set the default to "system"
 
+export GIT_PS1_SHOWDIRTYSTATE=1
+
 # pass foreground then background (optional)
 function _color() {
 	local PROMPT_COLOR_OUTPUT="\[\e[0m\]"
@@ -52,7 +54,7 @@ function _gitStatus() {
 		
 		if [ $SHOW_GIT = 1 ]; then
 			SYMBOL=$BRANCH
-			if [ "$GIT_STATUS_TEXT" == "master" ]; then
+			if [[ "$GIT_STATUS_TEXT" =~ ^master* ]]; then
 				SYMBOL=$MASTER
 			fi
 			GIT_STATUS="$(_color "1;$C_BLACK" $C_BG_GREEN)${SEPARATOR}$(_color)$(_color $C_WHITE $C_BG_GREEN) ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color $C_GREEN)${SEPARATOR}$(_color)"
