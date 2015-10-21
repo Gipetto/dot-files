@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Requires Powerline patched fonts: https://gist.github.com/1595572
 # Colors from http://www.arwin.net/tech/bash.php
 
@@ -10,8 +10,14 @@
 #        that we don't have to set the default to "system"
 
 export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM=
+export GIT_PS1_STATESEPARATOR=" "
+export GIT_PS1_HIDE_IF_PWD_IGNORED=1
 
 # pass foreground then background (optional)
+# @todo: replace with tput
 function _color() {
 	local PROMPT_COLOR_OUTPUT="\[\e[0m\]"
 	
@@ -34,8 +40,10 @@ function _gitStatus() {
 		return
 	fi
 	
-	local FORBIDDEN="homebrew.git"
-	local GIT_STATUS_TEXT="$(__git_ps1 "%s")"
+	local FORBIDDEN="homebrew"
+	local STASH="⚑"
+	local STAR="✷"
+	local GIT_STATUS_TEXT="$(__git_ps1 "%s" | sed -e "s/\\*/$STAR/" -e "s/\\$/$STASH/" -e "s/%/…/")"
 	
 	if [[ -n "$GIT_STATUS_TEXT" ]]; then
 		local GIT_REPO=''
@@ -43,10 +51,10 @@ function _gitStatus() {
 		local SHOW_GIT=1
 
 		if ! [ -z "$GIT_REMOTE" ]; then	
-			GIT_REPO=$(basename `echo $GIT_REMOTE | grep origin | grep push | awk '{print $2;}'`)
+			GIT_REPO=$(basename `git rev-parse --show-toplevel`)
 			for REPO in $FORBIDDEN; do
 				if [ $GIT_REPO = $REPO ]; then
-					SHOW_GIT=0
+					return
 				fi
 			done
 			GIT_REPO="$GIT_REPO "
@@ -56,6 +64,9 @@ function _gitStatus() {
 			SYMBOL=$BRANCH
 			if [[ "$GIT_STATUS_TEXT" =~ ^master* ]]; then
 				SYMBOL=$MASTER
+			fi
+			if [ $(git stash list | wc -l | bc) -eq 0 ]; then
+				STASH=''
 			fi
 			GIT_STATUS="$(_color "1;$C_BLACK" $C_BG_GREEN)${SEPARATOR}$(_color)$(_color $C_WHITE $C_BG_GREEN) ${GIT_REPO}${SYMBOL} ${GIT_STATUS_TEXT}$(_color)$(_color $C_GREEN)${SEPARATOR}$(_color)"
 		fi
@@ -109,6 +120,7 @@ function _prompt() {
 	local SEPARATOL=""
 	local BRANCH=""
 	local MASTER="≡"
+	local ZOT="⚡"
 
 	# Text Colors
 	local C_BLACK='30'
@@ -134,9 +146,10 @@ function _prompt() {
 	
 	if ! [[ $LAST_RETURN -eq 0 ]]; then
 		STATUS_COLOR="1;$C_RED"
+		#ZOT="$LAST_RETURN"
 	fi
-
-	local LOCAL_HOSTNAME=`scutil --get LocalHostName`
+	
+	# local LOCAL_HOSTNAME=`scutil --get LocalHostName`
 	local PYTHON_VIRTUALENV=$(_pythonVirtualenv)
 
 	local GIT_STATUS=$(_gitStatus)
@@ -151,8 +164,8 @@ function _prompt() {
 	elif ! [ -z "$SVN_STATUS" ]; then
 		SCM_STATUS="$SVN_STATUS"
 	fi
-				
-	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")⚡$(_color) "
+	
+	PROMPT="$(_color $C_BG_BLACK $C_WHITE)\u$(_color)${SCM_STATUS} \w $(_color "$STATUS_COLOR")${ZOT}$(_color) "
 	PS1=${RVM_STATUS}${PYTHON_VIRTUALENV}${PROMPT}	
 }
 
