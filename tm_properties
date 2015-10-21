@@ -30,3 +30,6 @@ fileType = 'text.html.markdown'
 
 [ *.txt ]
 fileType = 'text.html.markdown'
+
+[ *.json ]
+tabSize = 2
