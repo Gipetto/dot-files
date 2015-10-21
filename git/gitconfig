@@ -85,7 +85,7 @@
 	# init those submodules
 	subup = "!(git submodule sync; git submodule update --init --recursive;)"
 	# show a properly sorted list of tags
-	tagd = "!git log --tags --simplify-by-decoration --pretty=\"format:%ai %d\""
+	tg = "!git log --tags --simplify-by-decoration --pretty=\"format:[%ai] %C(yellow)%H%Creset - %Cgreen%D%Creset\""
 	# un-stage all files that have been staged/cached for commit
 	unstage = reset HEAD --
 	# perform soft reset to head, don't blow away changes
