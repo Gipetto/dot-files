@@ -33,3 +33,7 @@ fileType = 'text.html.markdown'
 
 [ *.json ]
 tabSize = 2
+
+[ *.erb ]
+softTabs = true
+tabSize = 2
