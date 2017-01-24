@@ -5,7 +5,7 @@
 
 ## Print a horizontal rule
 function rule () {
-	printf "%$(tput cols)s\n" | tr " " "─"
+	printf "%$(tput cols)s\n\n" | tr " " "─"
 }
 
 color_code_regex=$'(\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K])'
@@ -18,4 +18,4 @@ sed -E "s/^($color_code_regex)(diff --git .*)$/\\1$_rule\\5/g" | \
 # trailing rule
 sed -E "s/^($color_code_regex)(\+\+\+.*)$/\1\5\\1\\$newline$_rule/"  | \
 # remove leading +/- indicators
-sed -E "s/^($color_code_regex)[\+\-]/\1 /g"
+sed -E "s/^($color_code_regex)[\+\-]/\\1  /g"

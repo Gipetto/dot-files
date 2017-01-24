@@ -10,11 +10,15 @@ Installer TBD
 
 For most files you'll just symlink a copy in to your home directory
 
-	$ ln -s /path/to/dot-files/vimrc ~/.vimrc 
+	$ ln -s /path/to/dot-files/vimrc ~/.vimrc
 
 For the profile simply add one line to your `~/.profile` to source the provided profile:
 
     . /path/to/dot-files/profile
+
+### Zsh
+
+Install zprezto, then symlink this zprezto folder over the default install location in `~/`
 
 ### Git
 
@@ -24,7 +28,7 @@ Simply add this to your global `~/.gitconfig`:
 
 	[include]
 		path = /path/to/dot-files/git/gitconfig
-		
+
 #### Aliases
 
 - alias: list the currently know aliases
@@ -66,13 +70,13 @@ The file also sets a couple of environment helpers:
 - it disables `xdebug` when being used on the command line.
 - it sets `error_logging` to `E_ALL` when running PHPUnit.
 
-The included php-helpers are best enabled by auto-prepending the file to your PHP 
+The included php-helpers are best enabled by auto-prepending the file to your PHP
 environment. This can be done in two ways:
 
-1.	Modify your `php.ini` file and add the path to the php-helpers file to the 
+1.	Modify your `php.ini` file and add the path to the php-helpers file to the
 	`auto_prepend_file` property.
-1.	Copy the included `php_helpers.ini` file to your PHP install's `conf.d` 
-	directory and update the `auto_prepend_file` property in the file to reflect 
+1.	Copy the included `php_helpers.ini` file to your PHP install's `conf.d`
+	directory and update the `auto_prepend_file` property in the file to reflect
 	the path to the `php_helpers.php` file.
 
 
@@ -80,6 +84,6 @@ environment. This can be done in two ways:
 
 - Only guaranteed on OS X 10.8, and not fully guaranteed at that.
 - SVN support for prompt customization is weak.
-- RVM support currently requires that the default ruby version be set to the 
+- RVM support currently requires that the default ruby version be set to the
 	system version.
 	- `rvm --default use system`

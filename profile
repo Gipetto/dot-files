@@ -16,7 +16,7 @@ export EDITOR="vim"
 #export SVN_EDITOR="$EDITOR"
 
 # longer history
-export HISTSIZE=10000
+#export HISTSIZE=10000
 # ignore commands that lead with a space, ignore dups
 export HISTCONTROL=ignoreboth,ignoredups
 shopt -s histappend
@@ -29,10 +29,11 @@ export LESSCHARSET="utf-8"
 # update the locate database
 alias updatedb="sudo /usr/libexec/locate.updatedb"
 
-# flush the local dns cache
-alias flushdns="dscacheutil -flushcache"
-
 alias ls="ls -G"
 alias ll="ls -lah"
 alias less="less -MNR"
+alias http="http --style perldoc"
 #export GREP_OPTIONS='--color=auto -n -i'
+#alias composer="/usr/bin/php /usr/local/bin/composer"
+export COMPOSER_DISABLE_XDEBUG_WARN=1
+

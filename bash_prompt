@@ -47,7 +47,7 @@ function _gitStatus() {
 	
 	if [[ -n "$GIT_STATUS_TEXT" ]]; then
 		local GIT_REPO=''
-		local GIT_REMOTE=`git remote -v`		
+		local GIT_REMOTE=`git remote -v`
 		local SHOW_GIT=1
 
 		if ! [ -z "$GIT_REMOTE" ]; then	

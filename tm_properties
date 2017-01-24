@@ -16,7 +16,7 @@ tabSize = 4
 [ text.html.markdown ]
 softWrap = true
 wrapColumn = "Use Window Frame"
-softTabs = false
+softTabs = true
 tabSize = 4
 
 [ attr.untitled ]
@@ -33,6 +33,7 @@ fileType = 'text.html.markdown'
 
 [ *.json ]
 tabSize = 2
+softTabs = true
 
 [ *.erb ]
 softTabs = true
