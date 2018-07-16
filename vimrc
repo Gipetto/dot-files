@@ -6,6 +6,9 @@ set runtimepath+=$HOME/.vim/vim-markdown
 set encoding=utf-8
 set showcmd
 
+" put those pesky swap files in a central place
+set dir=~/tmp
+
 " highlight syntax
 syntax on
 

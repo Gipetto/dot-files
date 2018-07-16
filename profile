@@ -37,3 +37,6 @@ alias http="http --style perldoc"
 #alias composer="/usr/bin/php /usr/local/bin/composer"
 export COMPOSER_DISABLE_XDEBUG_WARN=1
 
+function flush-font-caches { 
+	sudo atsutil databases -remove
+}

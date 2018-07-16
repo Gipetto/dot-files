@@ -1,5 +1,5 @@
 [core]
-	pager = /usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight
+	pager = bash -lc 'git-diff-cleanup-output | less -FXr' -
 	quotepath = false
 	whitespace = space-before-tab,trailing-space,cr-at-eol
 	excludesfile = gitignore
@@ -13,17 +13,12 @@
 	remote = yellow
 [color "diff"]
 	meta = white bold
-[color "diff-highlight"]
-	meta = white bold	
 [push]
 	default = simple
 [diff]
-	color = always
 	algorithm = patience
 	renames = copies
 	indentHeuristic = on
-	colorMoved = on
-	wsErrorHighlight = all
 [web]
 	browser = chromium
 [branch]
@@ -40,7 +35,6 @@
 [tag]
 	sort = version:refname
 [log]
-	color = always
 	date = iso
 [gc]
 	pruneExpire = 1.weeks.ago
@@ -72,10 +66,10 @@
 	# open a comparison on Github
 	cm = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/compare/master...$(git rev-parse --abbrev-ref HEAD)#files_bucket\""
 	# show diff with files cached for commit
-	dc = diff --cached
-	# diff and open in TextMate
-	dm = "!f() { git diff $@ | mate; }; f "
-	dc = "!f() { git diff $@ > /tmp/_.diff; code -n /tmp/_.diff; }; f"
+	diffc = diff --cached
+	# diff and open in TextMate|VSCode
+	diffm = "!f() { git diff $@ | mate; }; f "
+	diffc = "!f() { git diff $@ > /tmp/_.diff; code -n /tmp/_.diff; }; f"
 	# Open the current branch on Github
 	gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
 	# show last commit summary
@@ -86,6 +80,7 @@
 	llg = "!git log --pretty=format:'%Cred%h%Creset - %Cblue%an%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' $* | sed -Ee 's/(^[^<]*), [[:digit:]]+ .*months?\\)/\\1)/' | less -FXRS"
 	# push current branch to its remote branch of the same name
 	pb = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
+	#pb = "!git push \"$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | cut -d '/' -f 1)\" \"$(git rev-parse --abbrev-ref HEAD)\""
 	# open a PR on Github
 	pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
 	# open a PR on Github against the branch's parent, not master
@@ -100,5 +95,4 @@
 	undo = reset --soft HEAD@{1}
 	# pull from remote tracking branch in to current branch
 	up = "!git pull origin \"$(git rev-parse --abbrev-ref HEAD)\""
-	# merge upstream branch
-	uup = "!git pull upstream \"$(git rev-parse --abbrev-ref HEAD)\""
+	#up = "!git pull \"$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | cut -d '/' -f 1)\" \"$(git rev-parse --abbrev-ref HEAD)\""

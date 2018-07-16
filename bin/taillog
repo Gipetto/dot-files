@@ -2,7 +2,43 @@
 
 # pretty log tailing
 function trimlog() {
-	perl -pe 's/\[error\]\s+\[client.*?\]\s+//; s/, referer:.*//'
+	while read data; do
+		local COLOR=;
+		local BOLD=;
+		if [[ $data == *\[SECURITY\]* ]]; then
+			COLOR=3;
+			BOLD=0;
+		elif [[ $data == ERROR* ]]; then
+			COLOR=1;
+			BOLD=1;
+		elif [[ $data == WARNING* ]]; then
+			COLOR=5;
+			BOLD=1;
+		elif [[ $data == NOTICE* ]]; then
+			COLOR=4;
+			BOLD=1;
+		elif [[ $data == INFO* ]]; then
+			COLOR=6;
+			BOLD=1;
+		elif [[ $data == DEBUG* ]]; then
+			COLOR=6;
+		elif [[ $data == Stack* ]]; then
+			COLOR=0;
+			BOLD=1;
+		fi
+		
+		if [[ ! -z $BOLD ]]; then
+			tput bold;
+		fi
+
+		if [[ ! -z $COLOR ]]; then
+			tput setaf $COLOR;
+		fi
+		
+		echo $data;
+		tput sgr0;
+	done;
 }
 
-sudo tail -n 50 -f /var/log/twilio/rest.log | trimlog
+tail -n 50 -f /var/log/twilio/rest.log | trimlog
+#less +F /var/log/twilio/rest.log
