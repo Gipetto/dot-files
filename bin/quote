@@ -1,0 +1,10 @@
+#! /usr/bin/php
+<?php
+$symbol = !empty($argv[1]) ? $argv[1] : 'TWLO';
+$d = json_decode(file_get_contents('http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' . $symbol), true);
+$lastPrice = sprintf("\033[30;1m%.2f\033[0m", $d['LastPrice']);
+$changeMod = $d['Change'] > 0 ? '+' : null;
+$changeFormat = ($d['Change'] >= 0) ? "\033[32;1m%s%.2f%s\033[0m" : "\033[31;1m%s%.2f%s\033[0m";
+$change = sprintf($changeFormat, $changeMod, $d['Change'], '');
+$changePercent = sprintf($changeFormat, '', $d['ChangePercent'], '%');
+printf("  %s %s | ↑ %.2f | ↓ %.2f | %s (%s)%s", $d['Symbol'], $lastPrice, $d['High'], $d['Low'], $change, $changePercent, PHP_EOL);
