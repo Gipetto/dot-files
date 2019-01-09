@@ -1,4 +1,8 @@
 .idea
+.vscode
 .tm_properties
 .DS_Store
 *.pyc
+vim/view/*
+vim/.netrwhist
+secretrc

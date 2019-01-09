@@ -76,6 +76,8 @@
 	# diff and open in TextMate
 	dm = "!f() { git diff $@ | mate; }; f "
 	dc = "!f() { git diff $@ > /tmp/_.diff; code -n /tmp/_.diff; }; f"
+	# delete merged branches
+	dmerged = "!git branch --merged | egrep -v \"(^\\*|master|dev)\" | xargs git branch -d"
 	# Open the current branch on Github
 	gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
 	# show last commit summary
@@ -86,6 +88,7 @@
 	llg = "!git log --pretty=format:'%Cred%h%Creset - %Cblue%an%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' $* | sed -Ee 's/(^[^<]*), [[:digit:]]+ .*months?\\)/\\1)/' | less -FXRS"
 	# push current branch to its remote branch of the same name
 	pb = "!git push origin \"$(git rev-parse --abbrev-ref HEAD)\""
+	pbu = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\""
 	# open a PR on Github
 	pr = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/pull/new/$(git rev-parse --abbrev-ref HEAD)\""
 	# open a PR on Github against the branch's parent, not master

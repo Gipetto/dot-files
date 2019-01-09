@@ -1,21 +1,28 @@
-" just a few common things that I'm always setting up
-
-" add to the runtime path to include plugins
-set runtimepath+=$HOME/.vim/vim-markdown
+" add to the runtime path to include plugins...
+set runtimepath=$HOME/Dropbox/Projects/dot-files/vim,$VIMRUNTIME
+" ... and use pathogen for plugin loading
+execute pathogen#infect()
 
 set encoding=utf-8
 set showcmd
 
+" mo better whitespace inspection
+:set listchars=eol:¬,tab:>-,trail:~,extends:>,precedes:<,space:·
+hi SpecialKey ctermfg=grey guifg=grey25
+
 " put those pesky swap files in a central place
 set dir=~/tmp
 
-" highlight syntax
 syntax on
-
-" always show line numbers
 set number
-set ruler
 set showmode
+
+filetype plugin on
+autocmd FileType markdown,text set nonumber
+
+" netrw
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
 
 " highlight more than 80 chars
 set colorcolumn=80
@@ -51,32 +58,22 @@ set ttyfast
 "au FocusLost * :set nu
 "au FocusGained * :set rnu
 
-" use Ctrl+L to toggle the line number counting method
-function! g:ToggleNuMode()
-	if(&rnu == 1)
-		set nu
-		au InsertEnter * :set nu
-		au InsertLeave * :set nu
-		au FocusLost * :set nu
-		au FocusGained * :set nu
-	else
-	    set rnu
-		au InsertEnter * :set nu
-		au InsertLeave * :set rnu
-		au FocusLost * :set nu
-		au FocusGained * :set rnu
-	endif
-endfunc
-nnoremap <C-L> :call g:ToggleNuMode()<cr>
+" Racer (syntax completion)
+"let g:racer_cmd
 
-" show KNF violations
-"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%81v.*/
-"let c_space_errors=1
+" Syntastic
+let g:syntastic_rust_checkers = ['cargo']
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
-" powerline
-" let g:Powerline_symbols = 'fancy'
-" set rtp+=/Users/shawn/Projects/powerline/powerline/bindings/vim
-" set laststatus=2
-" set antialias
-" set guifont=Monaco\ for\ Powerline\ 12
+" statusline moxy
+set noruler
+set laststatus=2
+set statusline=%F\ | 
+set statusline+=%{FugitiveStatusline()}
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+set statusline+=%=[%l,%L]\ 

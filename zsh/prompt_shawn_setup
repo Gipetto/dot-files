@@ -1,0 +1,166 @@
+# vim:ft=zsh ts=2 sw=2 sts=2
+# Based on agnoster
+
+CURRENT_BG='NONE'
+PRIMARY_FG=white
+
+SEGMENT_SEPARATOR="\ue0b0"
+PLUSMINUS="\u00b1"
+MASTER="\u2261"
+BRANCH="\uf418"
+STASH="\uf024"
+STAR="\u2737"
+HELLIP="\u2026"
+DETACHED="\u27a6"
+CROSS="\u2718"
+LIGHTNING="\u26a1"
+FORK="\uf402"
+DOLLAR="\uf155"
+
+prompt_segment() {
+	local bg fg
+	
+	[[ -n $1 ]] && bg="%K{$1}" || bg="%k"
+	[[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+	
+	if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
+		print -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
+	else
+		print -n "%{$bg%}%{$fg%}"
+	fi
+	
+	CURRENT_BG=$1
+	
+	[[ -n $3 ]] && print -n $3
+}
+
+prompt_end() {
+	if [[ -n $CURRENT_BG ]]; then
+		print -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+	else
+		print -n "%{%k%}"
+	fi
+	print -n "%{%f%}"
+	CURRENT_BG=''
+}
+
+prompt_context() {
+	local user=`whoami`
+
+	if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+		prompt_segment $PRIMARY_FG default " %(!.%{%F{yellow}%}.)$user "
+	fi
+}
+
+prompt_venv() {
+	if ! [ -z "$VIRTUAL_ENV" ]; then
+		prompt_segment yellow $PRIMARY_FG
+		print -Pn " `basename \"$VIRTUAL_ENV\"` "
+	fi
+}
+
+prompt_git() {
+	local color ref SYMBOL
+	
+	is_dirty() {
+		test -n "$(git status --porcelain --ignore-submodules)"
+	}
+	
+	is_fork() {
+		test -n "$(git remote -v | grep upstream)"
+	}
+	
+	ref="$vcs_info_msg_0_"
+	
+	if [[ -n "$ref" ]]; then
+		if is_dirty; then
+			color=yellow
+		else
+			color=green
+		fi
+	
+		SYMBOL=$BRANCH
+		if [[ "$ref" =~ ^master* ]]; then
+			SYMBOL=$MASTER
+		fi
+	
+		if [[ "${ref/.../}" == "$ref" ]]; then
+			ref="$SYMBOL $ref"
+		else
+			ref="$DETACHED ${ref/.../}"
+		fi
+	
+		if is_fork; then
+			ref="$FORK $ref"
+		fi
+	
+		prompt_segment $color $PRIMARY_FG
+		print -Pn " $ref"
+	fi
+}
+
+function +vi-git-stash() {
+	if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
+		hook_com[misc]+="$STASH"
+	fi
+}
+
+prompt_dir() {
+	prompt_segment black $PRIMARY_FG ' %~ '
+}
+
+# original agnoster status method
+# prompt_status() {
+# 	local symbols
+# 	symbols=()
+# 	[[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
+# 	[[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}$LIGHTNING"
+#
+# 	[[ -n "$symbols" ]] && prompt_segment $PRIMARY_FG default " $symbols "
+# }
+
+prompt_status() {
+	local symbols prompt_color
+	
+	prompt_color="green"
+	[[ $RETVAL -ne 0 ]] && prompt_color="red"
+	
+	symbols+=" %{%F{$prompt_color}%}\$%{%f%} "
+
+	[[ -n "$symbols" ]] && prompt_segment "" default "$symbols"
+}
+
+prompt_shawn_main() {
+	RETVAL=$?
+	CURRENT_BG='NONE'
+	prompt_venv
+	prompt_context
+	prompt_dir
+	prompt_git
+	prompt_end
+	prompt_status
+}
+
+prompt_shawn_precmd() {
+	vcs_info
+	PROMPT='%{%f%b%k%}$(prompt_shawn_main) '
+}
+
+prompt_shawn_setup() {
+	autoload -Uz add-zsh-hook
+	autoload -Uz vcs_info
+	
+	prompt_opts=(cr subst percent)
+	
+	add-zsh-hook precmd prompt_shawn_precmd
+	
+	zstyle ':vcs_info:*' enable git
+	zstyle ':vcs_info:*' check-for-changes true
+	zstyle ':vcs_info:*' unstagedstr "$STAR"
+	zstyle ':vcs_info:git*' formats '%b %u%m'
+	zstyle ':vcs_info:git*' actionformats '%b (%a)%u%m'
+	zstyle ':vcs_info:git*+set-message:*' hooks git-stash
+	#zstyle ':vcs_info:*+*:*' debug true
+}
+
+prompt_shawn_setup "$@"

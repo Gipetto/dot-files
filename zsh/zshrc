@@ -1,0 +1,100 @@
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
+
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+# Customize to your needs...
+
+if [[ -f ~/.localrc ]]; then
+  source ~/.localrc
+fi
+
+setopt no_share_history
+
+if [[ -s /usr/local/bin/jenv ]]; then
+  eval "$(jenv init -)"
+fi
+
+export HOMEBREW_INSTALL_CLEANUP=1
+export COMPOSER_DISABLE_XDEBUG_WARN=1
+export EDITOR="vim"
+export GIT_PS1_SHOWDIRTYSTATE=true
+
+#export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+
+#PATH=${JAVA_HOME}/bin:$PATH
+PATH=$PATH:/Users/shawn/bin:/Users/shawn/Dropbox/Projects/dot-files/bin
+if [[ -d /usr/local/opt/python@2/bin ]]; then
+  PATH="/usr/local/opt/python@2/bin:$PATH"
+fi
+if [[ -d /usr/local/opt/gettext/bin ]]; then
+  PATH="/usr/local/opt/gettext/bin:$PATH"
+fi
+if [[ -d /usr/local/opt/php@5.6/bin ]]; then
+  PATH="/usr/local/opt/php@5.6/bin:$PATH"
+fi
+if [[ -d /usr/local/opt/mysql@5.7/bin ]]; then
+  PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+fi
+if [[ -d /usr/local/opt/node@6/bin ]]; then
+  PATH="/usr/local/opt/node@6/bin:$PATH"
+fi
+GEMDIR=$(gem environment gemdir)
+if [[ -d $GEMDIR/bin ]]; then
+  PATH="$GEMDIR/bin:$PATH"
+fi
+export PATH
+
+#export LESS=" -MNR"
+export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+
+alias http="http --style perldoc"
+
+alias ls="ls -GF"
+alias vime="vim +'normal Go'"
+
+# git clone https://github.com/athityakumar/colorls.git
+# gem update colorls
+if [[ $(which colorls) ]]; then
+  alias l="colorls --light --sort-dirs"
+  alias la="colorls --light --sort-dirs -lA"
+  alias lc="colorls --light --tree"
+fi
+
+function flush-font-cache {
+	sudo atsutil databases -remove
+}
+
+function md {
+  pandoc -t html $1 | w3m -graph -T text/html
+}
+
+function tm {
+  CC="";
+  if [[ $TERM_PROGRAM == "iTerm"* ]]; then
+    CC="-CC";
+  fi
+  
+  tmux $CC new-session -s wookiee -c ~/Projects \; \
+    split-window -h \; \
+    select-pane -t 0 \; \
+    split-window -v \; \
+    select-pane -t 0 \;
+}
+
+function show-desktop() {
+	defaults write com.apple.finder CreateDesktop true; killall Finder
+}
+
+function hide-desktop() {
+	defaults write com.apple.finder CreateDesktop false; killall Finder
+}
+
+unalias mysql;
