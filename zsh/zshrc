@@ -31,6 +31,8 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 
 #PATH=${JAVA_HOME}/bin:$PATH
 PATH=$PATH:/Users/shawn/bin:/Users/shawn/Dropbox/Projects/dot-files/bin
+
+# Now lets all make special concessions for Homebrew
 if [[ -d /usr/local/opt/python@2/bin ]]; then
   PATH="/usr/local/opt/python@2/bin:$PATH"
 fi
@@ -45,6 +47,9 @@ if [[ -d /usr/local/opt/mysql@5.7/bin ]]; then
 fi
 if [[ -d /usr/local/opt/node@6/bin ]]; then
   PATH="/usr/local/opt/node@6/bin:$PATH"
+fi
+if [[ -d /usr/local/opt/ruby/bin ]]; then
+  PATH="/usr/local/opt/ruby/bin:$PATH"
 fi
 GEMDIR=$(gem environment gemdir)
 if [[ -d $GEMDIR/bin ]]; then

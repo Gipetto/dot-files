@@ -4,4 +4,4 @@
 .DS_Store
 *.pyc
 vim/.netrwhist
-secretrc
+local.rc

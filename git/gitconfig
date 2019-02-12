@@ -1,5 +1,5 @@
 [core]
-	pager = /usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight
+	pager = /usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight --colors | less -r
 	quotepath = false
 	whitespace = space-before-tab,trailing-space,cr-at-eol
 	excludesfile = gitignore
@@ -12,9 +12,7 @@
 	local = black
 	remote = yellow
 [color "diff"]
-	meta = white bold
-[color "diff-highlight"]
-	meta = white bold	
+	meta = yellow bold	
 [push]
 	default = simple
 [diff]
