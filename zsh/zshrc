@@ -70,7 +70,7 @@ alias vime="vim +'normal Go'"
 if [[ $(which colorls) ]]; then
   alias l="colorls --light --sort-dirs"
   alias la="colorls --light --sort-dirs -lA"
-  alias lc="colorls --light --tree"
+  alias lt="colorls --light --tree"
 fi
 
 function flush-font-cache {
