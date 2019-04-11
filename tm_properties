@@ -20,7 +20,7 @@ tabSize = 4
 [ text.html.markdown ]
 softWrap = true
 wrapColumn = "Use Window Frame"
-softTabs = false
+softTabs = true
 tabSize = 4
 
 [ attr.untitled ]
@@ -33,8 +33,8 @@ fileType = 'text.html.markdown'
 [ *.mdown ]
 fileType = 'text.html.markdown'
 
-[ *.txt ]
-fileType = 'text.html.markdown'
+# [ *.txt ]
+# fileType = 'text.html.markdown'
 
 [ *.json ]
 tabSize = 2
@@ -58,3 +58,4 @@ tabSize = 2
 
 [ source.python ]
 tabSize = 2
+softTabs = true
