@@ -1,4 +1,5 @@
 [core]
+	hooksPath = ~/Dropbox/Projects/dot-files/git/hooks
 	pager = /usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight --colors | less -r
 	quotepath = false
 	whitespace = space-before-tab,trailing-space,cr-at-eol

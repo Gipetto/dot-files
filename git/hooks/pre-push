@@ -1,0 +1,17 @@
+#!/bin/bash
+protected_branch='master'  
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ $protected_branch = $current_branch ]; then  
+    echo -en "\033[31mYou're about to push master, are you sure? [y|n] \033[0m"
+    echo -en "\033[1m"
+    read -n 1 -r < /dev/tty
+    echo -en "\033[0m"
+    echo
+    if echo $REPLY | grep -E '^[Yy]$' > /dev/null; then
+        exit 0 # OK
+    fi
+    exit 1 # Fail
+else
+    exit 0 # OK
+fi
