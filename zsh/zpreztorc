@@ -10,3 +10,4 @@ zstyle ':prezto:load' pmodule \
   'prompt' \
   'git'
 zstyle ':prezto:module:prompt' theme 'shawn'
+zstyle ':prezto:module:git:alias' skip 'yes'
