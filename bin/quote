@@ -1,10 +1,70 @@
 #! /usr/bin/php
 <?php
+class Quote {
+    private $keyMap = [
+        'symbol' => '01. symbol',
+        'open' => '02. open',
+        'high' => '03. high',
+        'low' => '04. low',
+        'price' => '05. price',
+        'volume' => '06. volume',
+        'latestTradingDay' => '07. latest trading day',
+        'previousClose' => '08. previous close',
+        'change' => '09. change',
+        'changePercent' => '10. change percent'
+    ];
+    
+    protected $apiKey = 'XHKJGK6MAX28YDSN';
+
+    protected $symbol;
+    protected $data;
+    
+    public function __construct($symbol) {
+        $this->symbol = strtoupper($symbol);
+    }
+
+    public function fetchQuote() {
+        # https://www.alphavantage.co/documentation/
+        $endpoint = sprintf('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=%s', 
+            $this->symbol, 
+            $this->apiKey
+        );
+        $this->data = json_decode(file_get_contents($endpoint), true)['Global Quote'];
+    }
+
+    public function getSymbol() {
+        return $this->symbol;
+    }
+
+    public function __get($key) {
+        if (!isset($this->keyMap[$key])) {
+            return false;
+        }
+        return $this->data[$this->keyMap[$key]];
+    }
+
+    public function printDaily() {
+        $lastPrice = sprintf("\033[30;1m%.2f\033[0m", $this->price);
+        $changeMod = $this->change > 0 ? '+' : null;
+        $changeFormat = ($this->change >= 0) ? "\033[32;1m%s%.2f%s\033[0m" : "\033[31;1m%s%.2f%s\033[0m";
+        $change = sprintf($changeFormat, $changeMod, $this->change, '');
+        $changePercent = sprintf($changeFormat, '', $this->changePercent, '%');
+        
+        printf("%s %s | ↑ %.2f | ↓ %.2f | %s (%s) | %s%s", 
+            $this->getSymbol(), 
+            $lastPrice, 
+            $this->high, 
+            $this->low, 
+            $change, 
+            $changePercent,
+            $this->latestTradingDay, 
+            PHP_EOL.PHP_EOL
+        );
+    }
+}
+
 $symbol = !empty($argv[1]) ? $argv[1] : 'TWLO';
-$d = json_decode(file_get_contents('http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' . $symbol), true);
-$lastPrice = sprintf("\033[30;1m%.2f\033[0m", $d['LastPrice']);
-$changeMod = $d['Change'] > 0 ? '+' : null;
-$changeFormat = ($d['Change'] >= 0) ? "\033[32;1m%s%.2f%s\033[0m" : "\033[31;1m%s%.2f%s\033[0m";
-$change = sprintf($changeFormat, $changeMod, $d['Change'], '');
-$changePercent = sprintf($changeFormat, '', $d['ChangePercent'], '%');
-printf("  %s %s | ↑ %.2f | ↓ %.2f | %s (%s)%s", $d['Symbol'], $lastPrice, $d['High'], $d['Low'], $change, $changePercent, PHP_EOL);
+
+$quote = new Quote($symbol);
+$quote->fetchQuote();
+$quote->printDaily();
