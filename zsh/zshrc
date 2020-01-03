@@ -58,6 +58,10 @@ if [[ -d $GEMDIR/bin ]]; then
 fi
 export PATH
 
+if [ -n "$(rbenv --version)" ]; then
+	eval "$(rbenv init -)"
+fi
+
 #export LESS=" -MNR"
 export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
 
