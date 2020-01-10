@@ -14,13 +14,14 @@ class Quote {
         'changePercent' => '10. change percent'
     ];
     
-    protected $apiKey = 'XHKJGK6MAX28YDSN';
+    protected $apiKey;
 
     protected $symbol;
     protected $data;
     
     public function __construct($symbol) {
         $this->symbol = strtoupper($symbol);
+        $this->apiKey = getenv('QUOTE_API_KEY');
     }
 
     public function fetchQuote() {
