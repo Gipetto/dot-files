@@ -14,9 +14,9 @@ for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
 done
 
 # link our customized files
-ln -fs ~/Dropbox/Projects/dot-files/zsh/zshrc "${ZDOTDIR:-$HOME}"/.zshrc
-ln -fs ~/Dropbox/Projects/dot-files/zsh/zpreztorc "${ZDOTDIR:-$HOME}"/.zpreztorc
+ln -fs ~/Projects/shawn/dot-files/zsh/zshrc "${ZDOTDIR:-$HOME}"/.zshrc
+ln -fs ~/Projects/shawn/dot-files/zsh/zpreztorc "${ZDOTDIR:-$HOME}"/.zpreztorc
 pushd "${ZDOTDIR:-$HOME}"/.zprezto/modules/prompt/functions
-ln -s ~/Dropbox/Projects/dot-files/zsh/prompt_shawn_setup prompt_shawn_setup
+ln -s ~/Projects/shawn/dot-files/zsh/prompt_shawn_setup prompt_shawn_setup
 popd
 ```

@@ -31,7 +31,7 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 #export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
 #PATH=${JAVA_HOME}/bin:$PATH
-PATH=$PATH:/Users/shawn/bin:/Users/shawn/Dropbox/Projects/dot-files/bin
+PATH=$PATH:/Users/shawn/bin:/Users/shawn/Projects/shawn/dot-files/bin
 
 # Now lets all make special concessions for Homebrew
 if [[ -d /usr/local/opt/python@2/bin ]]; then
