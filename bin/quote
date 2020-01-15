@@ -1,71 +1,75 @@
-#! /usr/bin/php
-<?php
-class Quote {
-    private $keyMap = [
-        'symbol' => '01. symbol',
-        'open' => '02. open',
-        'high' => '03. high',
-        'low' => '04. low',
-        'price' => '05. price',
-        'volume' => '06. volume',
-        'latestTradingDay' => '07. latest trading day',
-        'previousClose' => '08. previous close',
-        'change' => '09. change',
-        'changePercent' => '10. change percent'
-    ];
-    
-    protected $apiKey;
+#! /usr/bin/env python3
 
-    protected $symbol;
-    protected $data;
-    
-    public function __construct($symbol) {
-        $this->symbol = strtoupper($symbol);
-        $this->apiKey = getenv('QUOTE_API_KEY');
-    }
+import os
+import sys
+import urllib3
+import json
+import codecs
 
-    public function fetchQuote() {
-        # https://www.alphavantage.co/documentation/
-        $endpoint = sprintf('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=%s', 
-            $this->symbol, 
-            $this->apiKey
-        );
-        $this->data = json_decode(file_get_contents($endpoint), true)['Global Quote'];
-    }
+apiKey = os.environ['QUOTE_API_KEY']
+quoteFunction = 'GLOBAL_QUOTE'
+baseUrl = 'https://www.alphavantage.co/query?function={}&symbol={}&apikey={}'
+defaultSymbol = 'TWLO'
 
-    public function getSymbol() {
-        return $this->symbol;
-    }
-
-    public function __get($key) {
-        if (!isset($this->keyMap[$key])) {
-            return false;
-        }
-        return $this->data[$this->keyMap[$key]];
-    }
-
-    public function printDaily() {
-        $lastPrice = sprintf("\033[30;1m%.2f\033[0m", $this->price);
-        $changeMod = $this->change > 0 ? '+' : null;
-        $changeFormat = ($this->change >= 0) ? "\033[32;1m%s%.2f%s\033[0m" : "\033[31;1m%s%.2f%s\033[0m";
-        $change = sprintf($changeFormat, $changeMod, $this->change, '');
-        $changePercent = sprintf($changeFormat, '', $this->changePercent, '%');
-        
-        printf("%s %s | ↑ %.2f | ↓ %.2f | %s (%s) | %s%s", 
-            $this->getSymbol(), 
-            $lastPrice, 
-            $this->high, 
-            $this->low, 
-            $change, 
-            $changePercent,
-            $this->latestTradingDay, 
-            PHP_EOL.PHP_EOL
-        );
-    }
+keyMap = {
+  'symbol': '01. symbol',
+  'open': '02. open',
+  'high': '03. high',
+  'low': '04. low',
+  'price': '05. price',
+  'volume': '06. volume',
+  'latestTradingDay': '07. latest trading day',
+  'previousClose': '08. previous close',
+  'change': '09. change',
+  'changePercent': '10. change percent'
 }
 
-$symbol = !empty($argv[1]) ? $argv[1] : 'TWLO';
+def query(symbol):
+  http = urllib3.PoolManager()
+  reader = codecs.getreader('utf-8')
 
-$quote = new Quote($symbol);
-$quote->fetchQuote();
-$quote->printDaily();
+  url = baseUrl.format(quoteFunction, symbol, apiKey)
+  r = http.request('GET', url, preload_content=False)
+  
+  return json.load(reader(r))
+
+
+def parseData(data):
+  parsedData = {}
+  
+  for key, value in keyMap.items():
+    parsedData[key] = data['Global Quote'].get(value)
+
+  return parsedData
+
+
+def printQuote(data):
+  lastPrice = '\033[30;1m{:.2f}\033[0m'.format(float(data['price']))
+  change = round(float(data['change']), 2)
+  changePercent = round(float(data['changePercent'][:-1]), 2)
+  changeMod = '+' if change > 0 else ''
+  changeFormat = "\033[32;1m{}{}{}\033[0m" if change >= 0 else "\033[31;1m{}{}{}\033[0m"
+
+  print('{} {} | ↑ {:.2f} | ↓ {:.2f} | {} ({}) | {}'.format(
+    data['symbol'],
+    lastPrice,
+    float(data['high']),
+    float(data['low']),
+    changeFormat.format(changeMod, change, ''),
+    changeFormat.format('', changePercent, '%'),
+    data['latestTradingDay']
+  ))
+
+def main():
+  try:
+    symbol = sys.argv[1]
+  except IndexError:
+    symbol = defaultSymbol
+  
+  responseData = query(symbol)
+  parsedData = parseData(responseData)
+  printQuote(parsedData)
+
+
+if __name__ == '__main__':
+  main()
