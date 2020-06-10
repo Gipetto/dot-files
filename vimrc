@@ -1,5 +1,5 @@
 " add to the runtime path to include plugins...
-set runtimepath=$HOME/Projects/dot-files/vim,$VIMRUNTIME
+set runtimepath=$HOME/Projects/shawn/dot-files/vim,$VIMRUNTIME
 " ... and use pathogen for plugin loading
 execute pathogen#infect()
 
