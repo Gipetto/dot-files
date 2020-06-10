@@ -13,9 +13,12 @@
 	local = black
 	remote = yellow
 [color "diff"]
-	meta = yellow bold	
+	meta = yellow bold
 [push]
 	default = simple
+[pull]
+	rebase = false
+	ff = only
 [diff]
 	color = always
 	algorithm = patience
