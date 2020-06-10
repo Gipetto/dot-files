@@ -4,5 +4,5 @@ map(
   select(.installed[0].installed_as_dependency == false or .installed[0].installed_as_dependency == null) 
 ) | 
 map({(.name): .linked_keg}) | 
-add
+add | to_entries[] | "\(.key): \(.value)"
 '
