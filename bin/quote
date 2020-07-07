@@ -11,6 +11,9 @@ quoteFunction = 'GLOBAL_QUOTE'
 baseUrl = 'https://www.alphavantage.co/query?function={}&symbol={}&apikey={}'
 defaultSymbol = 'TWLO'
 
+READ_TIMEOUT = 1.5
+RETRIES = 1
+
 keyMap = {
   'symbol': '01. symbol',
   'open': '02. open',
@@ -29,7 +32,7 @@ def query(symbol):
   reader = codecs.getreader('utf-8')
 
   url = baseUrl.format(quoteFunction, symbol, apiKey)
-  r = http.request('GET', url, preload_content=False)
+  r = http.request('GET', url, preload_content=False, timeout=READ_TIMEOUT, retries=RETRIES)
   
   return json.load(reader(r))
 
@@ -66,10 +69,14 @@ def main():
   except IndexError:
     symbol = defaultSymbol
   
-  responseData = query(symbol)
-  parsedData = parseData(responseData)
-  printQuote(parsedData)
-
+  try:
+    responseData = query(symbol)
+    parsedData = parseData(responseData)
+    printQuote(parsedData)
+  except (urllib3.exceptions.ReadTimeoutError, urllib3.exceptions.MaxRetryError):
+    print('Failed to fetch quote for "{}" in the allotted {} seconds.'.format(symbol, str(READ_TIMEOUT)))
+  except Exception as e:
+    print(e)
 
 if __name__ == '__main__':
   main()
