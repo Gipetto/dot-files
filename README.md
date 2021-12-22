@@ -24,6 +24,12 @@ For most files you'll just symlink a copy in to your home directory
 ln -s /path/to/dot-files/vimrc ~/.vimrc
 ```
 
+If your network environment isn't IPv6 friendly
+``` sh
+ln -s /path/to/dot-files/wgetrc ~/.wgetrc
+ln -s /path/to/dot-files/curlrc ~/.curlrc
+```
+
 ## Zsh
 
 See the readme inside the `zsh` directory.
