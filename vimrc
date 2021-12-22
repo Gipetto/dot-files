@@ -76,4 +76,7 @@ set statusline+=%{FugitiveStatusline()}
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-set statusline+=%=[%l,%L]\ 
+set statusline+=%=[%l,%L]\
+
+" map `w!!` to override the need for sudo
+cmap w!! %!sudo tee > /dev/null %
