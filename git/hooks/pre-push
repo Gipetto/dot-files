@@ -1,19 +1,15 @@
 #!/bin/bash
-protected_branch='master'  
+protected_branch='master main'
+current_repo=$(basename `git rev-parse --show-toplevel`)
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
-# ignore slingshot
-if [[ `pwd` =~ 'slingshot/data' ]]; then
-    exit 0; # OK 
-fi
-
-# Not master, go go go
-if ! [ $protected_branch = $current_branch ]; then
+# Not main/master, go go go
+if ! [[ $protected_branch == *"$current_branch"* ]]; then
     exit 0; # OK
 fi
 
 tput bold && tput setaf 1;
-echo -n "You're about to push master, are you sure? [y|N]"
+echo -n "You're about to push to $current_branch on $current_repo, are you sure? [y|N]"
 tput sgr0;
 
 read -n 1 -r < /dev/tty;
