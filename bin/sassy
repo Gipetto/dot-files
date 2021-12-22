@@ -1,3 +1,0 @@
-#!/bin/bash
-
-sass --unix-newlines --cache-location /tmp/sass-cache --watch scss:css $@
