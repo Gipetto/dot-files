@@ -1,9 +1,9 @@
 [core]
-	hooksPath = ~/Projects/shawn/dot-files/git/hooks
+	# hooksPath = ~/Projects/shawn/dot-files/git/hooks
 	pager = /usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight --colors | less -r
 	quotepath = false
 	whitespace = space-before-tab,trailing-space,cr-at-eol
-	excludesfile = gitignore
+	excludesfile = ~/Projects/shawn/dot-files/git/gitignore
 	editor = vim
 	abbrev = 10
 [color]
@@ -57,7 +57,7 @@
 	# shorthand aliases
 	co = checkout
 	ci = commit
-	cia = commit --amend
+	cia = commit --amend -C@
 	st = "!f() { echo ''; git status -s $@; echo ''; }; f"
 
 	# list these aliases
