@@ -3,3 +3,4 @@
 nbproject
 *.pyc
 .vscode
+.tool-versions
