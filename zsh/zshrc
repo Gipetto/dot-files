@@ -9,71 +9,48 @@ fi
 
 # Customize to your needs...
 
-if [[ -f ~/.localrc ]]; then
-  source ~/.localrc
-fi
-
 setopt no_share_history
 
-if [[ -s /usr/local/bin/jenv ]]; then
-  eval "$(jenv init -)"
-fi
-
-export CDPATH=.:~/Projects
 export HOMEBREW_INSTALL_CLEANUP=1
 export COMPOSER_DISABLE_XDEBUG_WARN=1
-export EDITOR="vim"
 export GIT_PS1_SHOWDIRTYSTATE=true
+export EDITOR="vim"
+export PAGER="most"
+export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
 
-#export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 
-#PATH=${JAVA_HOME}/bin:$PATH
-PATH=$PATH:/Users/shawn/bin:/Users/shawn/Projects/shawn/dot-files/bin
+  autoload -Uz compinit
+  compinit
+fi
 
-# Now lets all make special concessions for Homebrew
-# if [[ -d /usr/local/opt/python@2/bin ]]; then
-#   PATH="/usr/local/opt/python@2/bin:$PATH"
-# fi
-if [[ -d /usr/local/opt/gettext/bin ]]; then
-  PATH="/usr/local/opt/gettext/bin:$PATH"
+if [[ -d /Users/shawn/bin ]]; then
+  PATH=$PATH:/Users/shawn/bin
 fi
-if [[ -d /usr/local/opt/php@5.6/bin ]]; then
-  PATH="/usr/local/opt/php@5.6/bin:$PATH"
-fi
-if [[ -d /usr/local/opt/mysql@5.7/bin ]]; then
-  PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
-fi
-#if [[ -d /usr/local/opt/node@6/bin ]]; then
-#  PATH="/usr/local/opt/node@6/bin:$PATH"
-#fi
-if [[ -d /usr/local/opt/ruby/bin ]]; then
-  PATH="/usr/local/opt/ruby/bin:$PATH"
-fi
+
 GEMDIR=$(gem environment gemdir)
 if [[ -d $GEMDIR/bin ]]; then
   PATH="$GEMDIR/bin:$PATH"
 fi
 export PATH
 
-if [ -n "$(rbenv --version)" ]; then
-	eval "$(rbenv init -)"
-fi
-
 # suffix aliases
 alias -s {md,json,html}=code
 alias -s {txt,csv}=code
 
-#export LESS=" -MNR"
-export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
-
-alias http="http --style perldoc"
+if [[ $(which -s http) = 0 ]]; then
+  alias http="http --style perldoc"
+fi
 
 alias ls="ls -GF"
 alias vime="vim +'normal Go'"
 
+alias diffc="git diff --color=never | code -"
+
 # git clone https://github.com/athityakumar/colorls.git
 # gem update colorls
-if [[ $(which colorls) ]]; then
+if [[ $(which -s colorls) = 0 ]]; then
   alias l="colorls --light --sort-dirs"
   alias la="colorls --light --sort-dirs -lA"
   alias lt="colorls --light --tree"
@@ -100,17 +77,12 @@ function tm {
     select-pane -t 0 \;
 }
 
-function show-desktop() {
-	defaults write com.apple.finder CreateDesktop true; killall Finder
-}
-
-function hide-desktop() {
-	defaults write com.apple.finder CreateDesktop false; killall Finder
+function thermlog() {
+    pmset -g thermlog
 }
 
 unalias mysql;
 
-# poor man's motd
-date
-quote twlo
-
+if [[ -f ~/.localrc ]]; then
+  source ~/.localrc
+fi
