@@ -1,0 +1,12 @@
+local OPT_HOMEBREW="/opt/homebrew"
+if [[ -s "$OPT_HOMEBREW"/bin/brew ]]; then
+    eval "$($OPT_HOMEBREW/bin/brew shellenv)"
+fi
+
+if [[ -s "$HOMEBREW_PREFIX"/opt/asdf/libexec/asdf.sh ]]; then
+  . "$HOMEBREW_PREFIX"/opt/asdf/libexec/asdf.sh
+fi
+
+if [[ -s "$HOME"/.zprezto/runcoms/zprofile ]]; then
+  . "$HOME"/.zprezto/runcoms/zprofile
+fi
