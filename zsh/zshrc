@@ -2,9 +2,9 @@
 # Executes commands at the start of an interactive session.
 #
 
-# Source Prezto.
+# Init Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+  . "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 # Customize to your needs...
@@ -15,8 +15,9 @@ export HOMEBREW_INSTALL_CLEANUP=1
 export COMPOSER_DISABLE_XDEBUG_WARN=1
 export GIT_PS1_SHOWDIRTYSTATE=true
 export EDITOR="vim"
-export PAGER="most"
-export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+
+export PAGER="less"
+export LESS="$LESS --no-init --quit-if-one-screen"
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
@@ -25,19 +26,22 @@ if type brew &>/dev/null; then
   compinit
 fi
 
-if [[ -d /Users/shawn/bin ]]; then
-  PATH=$PATH:/Users/shawn/bin
+if [[ -d "$HOME"/Projects/dot-files/bin ]]; then
+  PATH="$PATH:$HOME/Projects/dot-files/bin"
+fi
+
+if [[ -d "$HOME"/bin ]]; then
+  PATH="$PATH:$HOME/bin"
 fi
 
 GEMDIR=$(gem environment gemdir)
-if [[ -d $GEMDIR/bin ]]; then
+if [[ -d "$GEMDIR"/bin ]]; then
   PATH="$GEMDIR/bin:$PATH"
 fi
 export PATH
 
 # suffix aliases
-alias -s {md,json,html}=code
-alias -s {txt,csv}=code
+alias -s {yaml,json,md,html,txt,csv,php,js,java,scala,py}="code"
 
 if [[ $(which -s http) = 0 ]]; then
   alias http="http --style perldoc"

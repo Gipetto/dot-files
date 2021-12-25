@@ -1,6 +1,1 @@
 source ${HOME}/.zprezto/runcoms/zshenv
-
-if [[ -d /Users/shawn/Projects/owl ]]; then
-    export OWL=/Users/shawn/Projects/owl
-    eval "$(/Users/shawn/Projects/owl/bin/owl init -)"
-fi

@@ -7,8 +7,8 @@ This readme is almost always out of date...
 Nerdfonts.
 
 ```sh
-brew tap caskroom/fonts
-brew cask install font-hasklig font-meslo-nerd-font
+brew tap homebrew/cask-fonts
+brew install font-hasklig font-meslo-lg-nerd-font
 ```
 
 ## Terminal

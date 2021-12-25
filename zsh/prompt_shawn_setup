@@ -5,17 +5,12 @@ CURRENT_BG='NONE'
 PRIMARY_FG=white
 
 SEGMENT_SEPARATOR="\ue0b0"
-PLUSMINUS="\u00b1"
-MASTER="\u2261"
+MAIN="\ufc16"
 BRANCH="\uf418"
 STASH="\uf024"
-STAR="\u2737"
-HELLIP="\u2026"
-DETACHED="\u27a6"
-CROSS="\u2718"
-LIGHTNING="\u26a1"
 FORK="\uf402"
-DOLLAR="\uf155"
+
+local git_info
 
 prompt_segment() {
 	local bg fg
@@ -35,7 +30,7 @@ prompt_segment() {
 }
 
 prompt_end() {
-	if [[ -n $CURRENT_BG ]]; then
+	if [[ -n $CURRENT_BG && "$CURRENT_BG" != "none" ]]; then
 		print -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
 	else
 		print -n "%{%k%}"
@@ -48,77 +43,111 @@ prompt_context() {
 	local user=`whoami`
 	local hostname=`hostname`
 
-	if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
-		prompt_segment $PRIMARY_FG default " %(!.%{%F{yellow}%}.)$user@$hostname "
+	local context="$hostname"
+
+	if [[ -n "$SSH_CONNECTION" ]]; then
+		context="$user@$context"
+	fi
+
+	if [[ -n "$context" ]]; then
+		prompt_segment $PRIMARY_FG default " %(!.%{%F{yellow}%}.)$context "
+	fi
+}
+
+prompt_shlvl() {
+	if [[ $SHLVL > 1 ]]; then
+		local term=$TERM
+		prompt_segment magenta $PRIMARY_FG " %B$term%b "
 	fi
 }
 
 prompt_venv() {
 	if ! [ -z "$VIRTUAL_ENV" ]; then
-		prompt_segment yellow $PRIMARY_FG
-		print -Pn " `basename \"$VIRTUAL_ENV\"` "
+		local venv=`basename "$VIRTUAL_ENV"`
+		local py_version=`python --version | awk -F' ' '{ print $2 }'`
+		prompt_segment blue $PRIMARY_FG " %B$venv%b $py_version "
 	fi
 }
 
+# @TODO - label forks
 prompt_git() {
-	local color ref SYMBOL
+	local bg_color fg_color ref symbol pos repo
+	local -a state
+	local g=git-info
+
+	if $g; then
+		repo=$(basename `git rev-parse --show-toplevel`)
 	
-	is_dirty() {
-		test -n "$(git status --porcelain --ignore-submodules)"
-	}
-	
-	is_fork() {
-		test -n "$(git remote -v | grep upstream)"
-	}
-	
-	ref="$vcs_info_msg_0_"
-	
-	if [[ -n "$ref" ]]; then
-		if is_dirty; then
-			color=yellow
+		if [[ "${git_info[dirty]}" -gt 0 ]]; then
+			bg_color=yellow
+			fg_color=black
 		else
-			color=green
+			bg_color=green
+			fg_color=white
 		fi
-	
-		SYMBOL=$BRANCH
-		if [[ "$ref" =~ ^master* ]]; then
-			SYMBOL=$MASTER
+
+		symbol=$BRANCH
+		branch=${git_info[branch]}
+		if [[ "$branch" =~ ^master* || "$branch" =~ ^main* ]]; then
+			symbol=$MAIN
 		fi
-	
-		if [[ "${ref/.../}" == "$ref" ]]; then
-			ref="$SYMBOL $ref"
-		else
-			ref="$DETACHED ${ref/.../}"
-		fi
-	
-		if is_fork; then
-			ref="$FORK $ref"
-		fi
-	
-		prompt_segment $color $PRIMARY_FG
-		print -Pn " $ref"
+		
+		[[ -n ${git_info[_ahead]} ]] && state+=("${git_info[_ahead]}")
+		[[ -n ${git_info[_behind]} ]] && state+=("${git_info[_behind]}")		
+		[[ ${#state[@]} -gt 0 ]] && pos="(${(j:,:)state}) "
+
+		prompt_segment $bg_color $fg_color " $symbol %B${(e)git_info[prompt]}%b $pos${git_info[status]} "
 	fi
 }
 
-function +vi-git-stash() {
-	if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
-		hook_com[misc]+="$STASH"
+prompt_vcs() {
+	local fg_color bg_color dirty
+	local ref="$vcs_info_msg_0_"
+
+	if [[ -n "$ref" ]]; then
+		# don't do git here
+		[[ "$vcs_info_msg_0_" =~ "(git)" ]] && return
+
+		if [[ "$vcs_info_msg_0_" =~ "(svn)" ]]; then
+			dirty=`svn status | wc -l | xargs`
+		fi
+
+		if [[ $dirty -gt 0 ]]; then
+			bg_color=yellow
+			fg_color=black
+		else
+			bg_color=green
+			fg_color=white
+		fi
+		
+		prompt_segment $bg_color $fg_color "$ref"
 	fi
 }
 
 prompt_dir() {
-	prompt_segment black $PRIMARY_FG ' %~ '
-}
+	local format='%~/'
+	local s
+	local vcs
 
-# original agnoster status method
-# prompt_status() {
-# 	local symbols
-# 	symbols=()
-# 	[[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
-# 	[[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}$LIGHTNING"
-#
-# 	[[ -n "$symbols" ]] && prompt_segment $PRIMARY_FG default " $symbols "
-# }
+	[[ "$vcs_info_msg_0_" =~ "(svn)" ]] && s=1
+	[[ "$vcs_info_msg_0_" =~ "(git)" ]] && g=1
+
+	if [[ $g -gt 0 ]]; then
+		local repo_root=`git rev-parse --show-toplevel`
+	fi
+
+	if [[ $s -gt 0 ]]; then
+		local repo_root=`svn info . | grep -F "Working Copy Root Path:" | awk -F ': ' '{print $2}'`
+	fi
+
+	if [[ -n "$repo_root" ]]; then
+		local base=${repo_root%"$(basename $repo_root)"}
+		local current=`pwd`		
+		format="…/${current#$base}"
+	fi
+
+	prompt_segment black white " %B$format%b "
+}
 
 prompt_status() {
 	local symbols prompt_color
@@ -126,7 +155,7 @@ prompt_status() {
 	prompt_color="green"
 	[[ $RETVAL -ne 0 ]] && prompt_color="red"
 	
-	symbols+=" %{%F{$prompt_color}%}\$%{%f%} "
+	symbols+="%{%F{$prompt_color}%}\$%{%f%}"
 
 	[[ -n "$symbols" ]] && prompt_segment "" default "$symbols"
 }
@@ -134,16 +163,23 @@ prompt_status() {
 prompt_shawn_main() {
 	RETVAL=$?
 	CURRENT_BG='NONE'
+	prompt_shlvl
 	prompt_venv
 	prompt_context
 	prompt_dir
 	prompt_git
+	prompt_vcs
 	prompt_end
+	print ""
 	prompt_status
 }
 
 prompt_shawn_precmd() {
-	vcs_info
+	if (( $+functions[git-info] )); then
+		git_info=git-info
+  	fi
+    vcs_info
+	print ""
 	PROMPT='%{%f%b%k%}$(prompt_shawn_main) '
 }
 
@@ -155,13 +191,34 @@ prompt_shawn_setup() {
 	
 	add-zsh-hook precmd prompt_shawn_precmd
 	
-	zstyle ':vcs_info:*' enable git
-	zstyle ':vcs_info:*' check-for-changes true
-	zstyle ':vcs_info:*' unstagedstr "$STAR"
-	zstyle ':vcs_info:git*' formats '%b %u%m'
-	zstyle ':vcs_info:git*' actionformats '%b (%a)%u%m'
-	zstyle ':vcs_info:git*+set-message:*' hooks git-stash
+	zstyle ':vcs_info:*' enable svn git
+	zstyle ':vcs_info:*' check-for-changes false
+	zstyle ':vcs_info:*' unstagedstr "*"
 	#zstyle ':vcs_info:*+*:*' debug true
+
+	zstyle ':prezto:module:git:info' verbose 'yes'
+	zstyle ':prezto:module:git:info:action' format '! %s' # s
+	zstyle ':prezto:module:git:info:added' format '%BA%b:%a ' # a
+	zstyle ':prezto:module:git:info:ahead' format 'ahead:%A' # A
+	zstyle ':prezto:module:git:info:behind' format 'behind:%B' # B
+	zstyle ':prezto:module:git:info:branch' format '%b' # b
+	zstyle ':prezto:module:git:info:commit' format '➦ %.7c' # c
+	zstyle ':prezto:module:git:info:deleted' format '%BD%b:%d ' # d
+	zstyle ':prezto:module:git:info:modified' format '%BM%b:%m ' # m
+	zstyle ':prezto:module:git:info:position' format '%p' # p
+	zstyle ':prezto:module:git:info:renamed' format '➙' # r
+	zstyle ':prezto:module:git:info:stashed' format 's' # S
+	zstyle ':prezto:module:git:info:unmerged' format '═' # U
+	zstyle ':prezto:module:git:info:untracked' format '%B?%b:%u' # u
+	zstyle ':prezto:module:git:info:dirty' format '%D'
+	zstyle ':prezto:module:git:info:keys' format \
+		'state' '("%A" "%B")' \
+		'prompt' '$(coalesce "%b" "%p" "%c")%s' \
+		'status' '%S%a%d%m%r%U%u' \
+		'dirty' '%D' \
+		'branch' '%b' \
+		'_ahead' '%A' \
+		'_behind' '%B'
 }
 
 prompt_shawn_setup "$@"
