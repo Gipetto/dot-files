@@ -16,6 +16,11 @@ brew cask install font-hasklig font-meslo-nerd-font
 Import `MyNovel.terminal`.
 Requires Nerdfonts install.
 
+## iTerm
+
+Open Preferences > General > Preference  
+Load preferences from this repo's iterm directory
+
 ## RC files
 
 For most files you'll just symlink a copy in to your home directory
