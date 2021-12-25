@@ -28,6 +28,15 @@
 	indentHeuristic = on
 	colorMoved = on
 	wsErrorHighlight = all
+# [diff "zip"]
+# 	textconv = unzip -v
+# [diff "hex"]
+# 	textconf = hexdump -v -C
+# 	binary = true
+# [diff "pdf"]
+# 	textconv = mdls
+# [diff "bin"]
+# 	textconv = hexdump -v -C
 [web]
 	browser = chromium
 [branch]
@@ -36,6 +45,8 @@
 	enabled = true
 [merge]
 	stat = true
+[stash]
+	showPatch = true
 [status]
 	short = true
 	branch = true
