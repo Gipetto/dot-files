@@ -1,9 +1,11 @@
 [core]
+	## This doesn't do what we want. Its not additive, it is a complete override :(
 	# hooksPath = ~/Projects/shawn/dot-files/git/hooks
-	pager = /usr/local/opt/git/share/git-core/contrib/diff-highlight/diff-highlight --colors | less -r
+	## Add pager to ~/.gitconfig to avoid cross platform squabbles
+	# pager = `brew --prefix git`/share/git-core/contrib/diff-highlight/diff-highlight --colors | less -R --no-init --quit-if-one-screen
 	quotepath = false
 	whitespace = space-before-tab,trailing-space,cr-at-eol
-	excludesfile = ~/Projects/shawn/dot-files/git/gitignore
+	excludesfile = ./gitignore
 	editor = vim
 	abbrev = 10
 [color]
