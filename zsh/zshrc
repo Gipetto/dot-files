@@ -20,8 +20,8 @@ export PAGER="less"
 export LESS="$LESS --no-init --quit-if-one-screen"
 
 if type brew &>/dev/null; then
+  # init zsh completions on Mac 'cause they're from homebrew
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-
   autoload -Uz compinit
   compinit
 fi
@@ -79,10 +79,6 @@ function tm {
     select-pane -t 0 \; \
     split-window -v \; \
     select-pane -t 0 \;
-}
-
-function thermlog() {
-    pmset -g thermlog
 }
 
 unalias mysql;

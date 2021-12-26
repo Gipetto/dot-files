@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+# Watch for thermal throttling on OS X
+
+pmset -g thermlog
