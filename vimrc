@@ -33,6 +33,7 @@ set sm
 " more readable tab stop on the command line
 set tabstop=4
 set backspace=indent,eol,start
+set expandtab
 
 " always show 4 lines at the bottom of the screen
 set scrolloff=4

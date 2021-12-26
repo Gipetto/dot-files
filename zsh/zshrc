@@ -77,7 +77,8 @@ function tm {
   tmux $CC new-session -s wookiee -c ~/Projects \; \
     split-window -h \; \
     select-pane -t 0 \; \
-    split-window -v \; \
+    resize-pane -t 0 -x 30% \; \
+	split-window -v \; \
     select-pane -t 0 \;
 }
 
