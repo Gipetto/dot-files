@@ -55,8 +55,8 @@ prompt_context() {
 }
 
 prompt_shlvl() {
-	if [[ $SHLVL > 1 ]]; then
-		local term=$TERM
+	local term=$TERM
+	if [[ $SHLVL > 1 && "$term" = *screen* ]]; then
 		prompt_segment magenta $PRIMARY_FG " %B$term%b "
 	fi
 }
@@ -188,6 +188,8 @@ prompt_shawn_setup() {
 	autoload -Uz vcs_info
 	
 	prompt_opts=(cr subst percent)
+	# I set this on ubuntu once, I don't recall why
+	# prompt_opts=(cr percent sp subst)
 	
 	add-zsh-hook precmd prompt_shawn_precmd
 	
