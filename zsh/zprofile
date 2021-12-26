@@ -5,6 +5,8 @@ fi
 
 if [[ -s "$HOMEBREW_PREFIX"/opt/asdf/libexec/asdf.sh ]]; then
   . "$HOMEBREW_PREFIX"/opt/asdf/libexec/asdf.sh
+elif [[ -s "$HOME/.asdf/asdf.sh" ]]; then
+  . "$HOME"/.asdf/asdf.sh
 fi
 
 if [[ -s "$HOME"/.zprezto/runcoms/zprofile ]]; then
