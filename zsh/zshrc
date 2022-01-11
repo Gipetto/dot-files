@@ -43,14 +43,19 @@ export PATH
 # suffix aliases
 alias -s {yaml,json,md,html,txt,csv,php,js,java,scala,py}="code"
 
-if [[ $(which -s http) = 0 ]]; then
+if type http &> /dev/null; then
   alias http="http --style perldoc"
 fi
 
-alias ls="ls -GF"
 alias vime="vim +'normal Go'"
 
 alias diffc="git diff --color=never | code -"
+
+if type exa &> /dev/null; then
+  alias ls="exa -F"
+else
+  alias ls="ls -GF"
+fi
 
 # git clone https://github.com/athityakumar/colorls.git
 # gem update colorls
