@@ -1,0 +1,30 @@
+---
+# Docker
+- name: Add Docker apt GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+    state: present
+
+- name: Install Docker
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose
+
+- name: Move Docker container root
+  ansible.builtin.template:
+    src: docker-daemon.json
+    dest: /etc/docker/
+    mode: "0644"
+  notify: restart docker
+
+- name: Start containers
+  ansible.builtin.shell: cd /mnt/containers/docker && make up
+  register: res
+  changed_when: docker ps -a | grep "plex" != ""

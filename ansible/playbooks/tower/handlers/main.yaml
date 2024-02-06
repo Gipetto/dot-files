@@ -1,0 +1,7 @@
+---
+- name: restart docker
+  systemd:
+    name: docker
+    dameon_reload: yes
+    state: restarted
+  when: skip_docker_restart

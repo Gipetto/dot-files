@@ -1,0 +1,25 @@
+---
+- name: Tower
+  hosts: localhost
+  become: true
+
+  vars_files:
+    - default.yaml
+
+  tasks:
+    - name: System Packages
+      ansible.builtin.include_tasks: tasks/system.yaml
+
+    - name: Install Docker
+      ansible.builtin.include_tasks: tasks/docker.yaml
+
+    - name: Install packages for site authoring
+      ansible.builtin.apt:
+        pkg:
+          - libgsl-dev
+    - name: Image Editing tools
+      ansible.builtin.apt:
+        pkg:
+          - gimp
+          - hugin
+          - hugin-tools

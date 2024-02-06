@@ -1,0 +1,9 @@
+{
+  "data-root": "{{ docker_data_root }}",
+  "runtimes": {
+    "nvidia": {
+        "path": "nvidia-container-runtime",
+        "runtimeArgs": []
+    }
+  }
+}

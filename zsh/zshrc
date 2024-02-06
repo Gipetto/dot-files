@@ -8,14 +8,14 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
-
+bindkey -v
 setopt no_share_history
 
 export HOMEBREW_INSTALL_CLEANUP=1
 export COMPOSER_DISABLE_XDEBUG_WARN=1
 export GIT_PS1_SHOWDIRTYSTATE=true
 export EDITOR="vim"
-
+export VISUAL="vim"
 export PAGER="less"
 export LESS="$LESS --no-init --quit-if-one-screen"
 
@@ -47,14 +47,15 @@ if type http &> /dev/null; then
   alias http="http --style perldoc"
 fi
 
+alias cal="ncal -b"
 alias vime="vim +'normal Go'"
 
 alias diffc="git diff --color=never | code -"
 
 if type exa &> /dev/null; then
-  alias ls="exa -F"
+  alias ls="exa -F --git --time-style=long-iso"
 else
-  alias ls="ls -GF"
+  alias ls="ls -GF --time-style=long-iso"
 fi
 
 # git clone https://github.com/athityakumar/colorls.git
@@ -88,6 +89,19 @@ function tm {
 }
 
 unalias mysql;
+#autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+#add-zsh-hook chpwd chpwd_recent_dirs
+
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+zstyle ':chpwd:*' recent-dirs-default yes
+zstyle ':completion:*' recent-dirs-insert always
+
+if [[ -s "$HOMEBREW_PREFIX"/opt/asdf/libexec/asdf.sh ]]; then
+  . "$HOMEBREW_PREFIX"/opt/asdf/libexec/asdf.sh
+elif [[ -s "$HOME/.asdf/asdf.sh" ]]; then
+  . "$HOME"/.asdf/asdf.sh
+fi
 
 if [[ -f ~/.localrc ]]; then
   source ~/.localrc

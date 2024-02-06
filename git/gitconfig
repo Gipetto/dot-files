@@ -8,6 +8,8 @@
 	excludesfile = ./gitignore
 	editor = vim
 	abbrev = 10
+[init]
+	defaultBranch = main
 [color]
 	ui = auto
 [color "branch"]
@@ -78,6 +80,8 @@
 
 	# show log of just current branch
 	branchlog = "!git log --not HEAD"
+	# show list of branches by date
+	branchdates = "!git for-each-ref --sort=committerdate refs/heads/ --format='%(committerdate:short) %(refname:short)'"
 	# copy current branch name to clipboard
 	cb = "!(/usr/bin/env echo -n \"$(git rev-parse --abbrev-ref HEAD)\" | pbcopy; echo `tput setaf 5`'Branch name copied to clipboard'`tput sgr0`)"
 	# create a new branch from the current branch and track its remote
@@ -91,8 +95,10 @@
 	# diff and open in TextMate
 	dm = "!f() { git diff $@ | mate; }; f "
 	dc = "!f() { git diff $@ > /tmp/_.diff; code -n /tmp/_.diff; }; f"
-	# delete merged branches
-	dmerged = "!git branch --merged | egrep -v \"(^\\*|master|dev)\" | xargs git branch -d"
+	bdiff = "!f() { git --no-pager diff --name-only --relative --diff-filter=d | xargs bat --diff; }; f"
+    # delete merged branches
+	dmerged = "!git branch --merged | egrep -v \"(^\\*|master|dev|main)\" | xargs git branch -d"
+	dsquashedandmerged = "!git branch --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" { print $1 }' | xargs -r git branch -D"
 	# Open the current branch on Github
 	gh = "!open \"$(git remote -v | grep origin | grep push | cut -f 2 | cut -d \" \" -f 1 | sed -e \"s|git@\\(.*\\):\\(.*\\).git|https://\\1/\\2|\")/tree/$(git rev-parse --abbrev-ref HEAD)\""
 	# show last commit summary

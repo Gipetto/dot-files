@@ -1,0 +1,4 @@
+---
+
+docker_data_root: /mnt/containers/docker/var/lib/docker
+nvidia_drivers_version: 525
