@@ -20,6 +20,7 @@
 	meta = yellow bold
 [push]
 	default = simple
+    autoSetupRemote = true
 [pull]
 	rebase = false
 	ff = only
